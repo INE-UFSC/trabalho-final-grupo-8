@@ -12,7 +12,24 @@ def main():
         pg.K_SPACE: 'interact'
     })
 
+    pg.font.init()
+
+    font = pg.font.SysFont('liberation mono', 12)
+
     surface = pg.Surface((200, 150))
+
+    array = [0, 9, 7, 5, 9, 2, 1, 4]
+
+    for index, number in enumerate(array):
+        pg.draw.rect(
+            surface,
+            (255, 0, 0),
+            pg.Rect(index * 18, 70, 15, 15)
+        )
+        surface.blit(
+            font.render(str(number), False, (255, 255, 255)),
+            (index * 18 + 5, 70)
+        )
 
     while True:
         inputs.update()
