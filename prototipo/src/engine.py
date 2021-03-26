@@ -20,7 +20,7 @@ class DisplayManager:
         )
         print(self.__get_resolution())
         self.tick()
-        
+
     def __get_resolution(self):
         root = tk.Tk()
         screen_width = root.winfo_screenwidth()
@@ -44,6 +44,7 @@ class InputManager:
     """ Gerencia as teclas pressionadas """
 
     def __init__(self, mappings: dict[int, str]):
+        self.__mouse_pos = pg.mouse.get_pos()
         self.__mappings = mappings
         self.__pressed: set[str] = set()
         self.__just_pressed: set[str] = set()
@@ -57,6 +58,11 @@ class InputManager:
     def just_pressed(self):
         """ As teclas pressionadas no frame atual """
         return self.__just_pressed
+
+    def mouse_pos(self, scale: int):
+        """ Posição do mouse """
+        mouse_x, mouse_y = pg.mouse.get_pos()
+        return (round(mouse_x / scale), round(mouse_y / scale))
 
     def update(self):
         """ Atualiza as teclas """
@@ -73,3 +79,9 @@ class InputManager:
                     self.__just_pressed.add(action_name)
                 elif action_name in self.__pressed:
                     self.__pressed.remove(action_name)
+            elif event.type in (pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP):
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    self.__pressed.add('m1')
+                    self.__just_pressed.add('m1')
+                elif event.type == pg.MOUSEBUTTONUP:
+                    self.__pressed.remove('m1')
