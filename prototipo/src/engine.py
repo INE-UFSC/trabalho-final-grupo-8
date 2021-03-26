@@ -3,6 +3,7 @@
 
 import sys
 import pygame as pg
+import tkinter as tk
 
 
 class DisplayManager:
@@ -17,8 +18,14 @@ class DisplayManager:
         self.__window = pg.display.set_mode(
             (resolution[0] * scale, resolution[1] * scale), 0, 32
         )
-
+        print(self.__get_resolution())
         self.tick()
+        
+    def __get_resolution(self):
+        root = tk.Tk()
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+        return (screen_width, screen_height)
 
     def tick(self) -> float:
         """ Atualiza o clock do jogo """
