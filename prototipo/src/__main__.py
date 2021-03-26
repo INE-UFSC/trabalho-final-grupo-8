@@ -3,6 +3,7 @@
 
 import pygame as pg
 from src.engine import DisplayManager, InputManager
+from src.number_box import NumberBox
 
 
 def main():
@@ -14,22 +15,10 @@ def main():
 
     pg.font.init()
 
-    font = pg.font.SysFont('liberation mono', 12)
-
     surface = pg.Surface((200, 150))
+    box = NumberBox(1)
 
-    array = [0, 9, 7, 5, 9, 2, 1, 4]
-
-    for index, number in enumerate(array):
-        pg.draw.rect(
-            surface,
-            (255, 0, 0),
-            pg.Rect(index * 18, 70, 15, 15)
-        )
-        surface.blit(
-            font.render(str(number), False, (255, 255, 255)),
-            (index * 18 + 5, 70)
-        )
+    surface.blit(box.surface, (0, 0))
 
     while True:
         inputs.update()
