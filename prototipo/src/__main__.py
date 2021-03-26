@@ -8,9 +8,9 @@ from src.number_box import NumberBox
 
 def main():
     """ Função principal do projeto """
-    SCALE = 2
+    scale = 2
 
-    display = DisplayManager((200, 150), scale=SCALE)
+    display = DisplayManager((200, 150), scale=scale)
     inputs = InputManager({
         pg.K_SPACE: 'interact'
     })
@@ -22,7 +22,7 @@ def main():
 
     while True:
         inputs.update()
-        _ = inputs.mouse_pos(SCALE)
+        _ = inputs.mouse_pos(scale)
         _ = display.tick()
 
         display.draw(surface)
