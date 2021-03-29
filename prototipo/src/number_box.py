@@ -9,8 +9,14 @@ class NumberBox:
 
     def __init__(self, number):
         self.__number = number
+        self.__rect = pg.Rect(0, 0, 15, 15)
         self.__surface = pg.Surface((15, 15))
         self.__draw()
+
+    @property
+    def rect(self):
+        """ A bounding box da caixa """
+        return self.__rect
 
     @property
     def number(self):
