@@ -8,11 +8,13 @@ import pygame as pg
 class DisplayManager:
     """ Inicializa a janela """
 
-    def __init__(self, resolution: tuple[int, int]):
+    def __init__(self, caption: str, resolution: tuple[int, int], framerate=60):
         pg.init()
-        pg.display.set_caption("Jogo dos Arrays")
+        pg.font.init()
 
-        self.__framerate = 60
+        pg.display.set_caption(caption)
+
+        self.__framerate = framerate
         self.__clock = pg.time.Clock()
         self.__window = pg.display.set_mode(
             resolution,
@@ -72,9 +74,13 @@ class InputManager:
                     self.__just_pressed.add(action_name)
                 elif action_name in self.__pressed:
                     self.__pressed.remove(action_name)
-            elif event.type in (pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP):
+            elif (
+                event.type in (pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP) and
+                pg.MOUSEBUTTONDOWN in self.__mappings
+            ):
+                action_name = self.__mappings[pg.MOUSEBUTTONDOWN]
                 if event.type == pg.MOUSEBUTTONDOWN:
-                    self.__pressed.add('m1')
-                    self.__just_pressed.add('m1')
+                    self.__pressed.add(action_name)
+                    self.__just_pressed.add(action_name)
                 elif event.type == pg.MOUSEBUTTONUP:
-                    self.__pressed.remove('m1')
+                    self.__pressed.remove(action_name)
