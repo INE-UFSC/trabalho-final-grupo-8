@@ -3,29 +3,23 @@
 
 import sys
 import pygame as pg
-import tkinter as tk
 
 
 class DisplayManager:
     """ Inicializa a janela """
 
-    def __init__(self, resolution: tuple[int, int], scale: int = 1):
+    def __init__(self, resolution: tuple[int, int]):
         pg.init()
         pg.display.set_caption("Jogo dos Arrays")
 
         self.__framerate = 60
         self.__clock = pg.time.Clock()
         self.__window = pg.display.set_mode(
-            (resolution[0] * scale, resolution[1] * scale), 0, 32
+            resolution,
+            pg.RESIZABLE | pg.HWSURFACE | pg.DOUBLEBUF | pg.SCALED,
+            32
         )
-        print(self.__get_resolution())
         self.tick()
-
-    def __get_resolution(self):
-        root = tk.Tk()
-        screen_width = root.winfo_screenwidth()
-        screen_height = root.winfo_screenheight()
-        return (screen_width, screen_height)
 
     def tick(self) -> float:
         """ Atualiza o clock do jogo """
@@ -34,9 +28,7 @@ class DisplayManager:
     def draw(self, surface: pg.Surface):
         """ Desenha uma superfície na janela """
         self.__window.fill((0, 0, 0))
-        self.__window.blit(
-            pg.transform.scale(surface, self.__window.get_size()), (0, 0)
-        )
+        self.__window.blit(surface, (0, 0))
         pg.display.update()
 
 
@@ -44,10 +36,10 @@ class InputManager:
     """ Gerencia as teclas pressionadas """
 
     def __init__(self, mappings: dict[int, str]):
-        self.__mouse_pos = pg.mouse.get_pos()
         self.__mappings = mappings
         self.__pressed: set[str] = set()
         self.__just_pressed: set[str] = set()
+        self.__mouse_pos = (0, 0)
 
     @property
     def pressed(self):
@@ -59,14 +51,15 @@ class InputManager:
         """ As teclas pressionadas no frame atual """
         return self.__just_pressed
 
-    def mouse_pos(self, scale: int):
-        """ Posição do mouse """
-        mouse_x, mouse_y = pg.mouse.get_pos()
-        return (round(mouse_x / scale), round(mouse_y / scale))
+    @property
+    def mouse_pos(self):
+        """ A posição do mouse """
+        return self.__mouse_pos
 
     def update(self):
         """ Atualiza as teclas """
         self.__just_pressed.clear()
+        self.__mouse_pos = pg.mouse.get_pos()
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
