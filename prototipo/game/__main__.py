@@ -2,8 +2,8 @@
 
 
 import pygame as pg
-from src.engine import DisplayManager, InputManager
-from src.number_box import NumberBox
+from game.engine import DisplayManager, InputManager
+from game.number_box import NumberBox
 
 
 def main():
