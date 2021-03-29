@@ -3,7 +3,7 @@
 
 import pygame as pg
 from game.engine import DisplayManager, InputManager
-from game.number_box import NumberBox
+from game.number_array import NumberArray
 
 
 def main():
@@ -16,9 +16,7 @@ def main():
     })
 
     surface = pg.Surface((200, 150))
-    boxes = [NumberBox(number) for number in range(10)]
-
-    dragging = None
+    array = NumberArray(range(10))
 
     while True:
         inputs.update()
@@ -26,21 +24,13 @@ def main():
 
         surface.fill((0, 0, 0))
 
-        box_under_cursor = None
-        for box in boxes:
-            if box.rect.collidepoint(*inputs.mouse_pos):
-                box_under_cursor = box
-            surface.blit(box.surface, box.rect.topleft)
+        array.handle_mouse(
+            inputs.mouse_pos,
+            "mouse_click" in inputs.pressed,
+            "mouse_click" in inputs.just_pressed
+        )
 
-        if "mouse_click" in inputs.just_pressed and dragging is None:
-            boxes.append(boxes.pop(boxes.index(box_under_cursor)))
-            dragging = box_under_cursor
-        elif dragging is not None and "mouse_click" not in inputs.pressed:
-            dragging = None
-
-        if dragging is not None:
-            dragging.rect.center = inputs.mouse_pos
-
+        array.draw(surface, 130, margin=5)
         display.draw(surface)
 
 
