@@ -3,7 +3,7 @@
 
 import pygame as pg
 from game.engine import DisplayManager, InputManager
-from game.number_array import NumberArray
+from game.number_array import InteractableNumberArray, NumberArray
 
 
 def main():
@@ -16,7 +16,9 @@ def main():
     })
 
     surface = pg.Surface((200, 150))
-    array = NumberArray(range(10))
+
+    player_array = InteractableNumberArray(range(10), (0, 155, 0))
+    enemy_array = NumberArray(range(10), (255, 0, 0))
 
     while True:
         inputs.update()
@@ -24,13 +26,15 @@ def main():
 
         surface.fill((0, 0, 0))
 
-        array.handle_mouse(
+        player_array.handle_mouse(
             inputs.mouse_pos,
             "mouse_click" in inputs.pressed,
             "mouse_click" in inputs.just_pressed
         )
 
-        array.draw(surface, 130, margin=5)
+        enemy_array.draw(surface, 5, margin=5)
+        player_array.draw(surface, 130, margin=5)
+
         display.draw(surface)
 
 
