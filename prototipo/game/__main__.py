@@ -18,7 +18,7 @@ def main():
     surface = pg.Surface((200, 150))
 
     player_array = InteractableNumberArray(range(10), (0, 155, 0))
-    enemy_array = NumberArray(range(10), (255, 0, 0))
+    enemy_array = NumberArray(range(200, 210), (255, 0, 0))
 
     while True:
         inputs.update()

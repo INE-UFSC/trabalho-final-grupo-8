@@ -23,13 +23,10 @@ class NumberBox:
         return self.__surface
 
     def __draw(self, number: int, color: tuple[int, int, int]):
-        font = pg.font.SysFont('arial', 12)
+        font = pg.font.SysFont('notosans', 8)
+        text = font.render(str(number), False, (255, 255, 255))
         pg.draw.rect(self.__surface, color, pg.Rect(0, 0, 15, 15))
         self.__surface.blit(
-            font.render(
-                str(number),
-                False,
-                (255, 255, 255)
-            ),
-            (0, 0)
+            text,
+            ((15 - text.get_width()) / 2, (15 - text.get_height()) / 2)
         )
