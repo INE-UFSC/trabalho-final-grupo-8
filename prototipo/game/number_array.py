@@ -87,8 +87,8 @@ class InteractableNumberArray(NumberArray):
         for box in self.array:
             if (
                 box != self.__dragging and
-                abs(box.rect.centerx - self.__dragging.rect.centerx) < 5 and
-                abs(box.rect.centery - self.__dragging.rect.centery) < 5
+                abs(box.rect.centerx - self.__dragging.rect.centerx) < 8 and
+                abs(box.rect.centery - self.__dragging.rect.centery) < 8
             ):
                 self.switch_positions(
                     self.array.index(self.__dragging),
