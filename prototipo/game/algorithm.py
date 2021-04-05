@@ -7,32 +7,26 @@ from abc import ABC, abstractmethod
 class Algorithm(ABC):
     """ Base de um algoritmo """
 
-    def __init__(self, array: list):
-        self.__original_array = array
-        self.__current_array = array
-        self.__done = False
+    def __init__(self):
+        self.__array: list[int] = []
 
     @property
-    def original_array(self):
-        """ O estado original do array """
-        return self.__original_array
-
-    @original_array.setter
-    def original_array(self, array: list):
-        """ Define um novo array para realizar o sort """
-        self.__original_array = array
-        self.__current_array = array
-        self.__done = False
-
-    @property
-    def current_array(self):
+    def array(self):
         """ O estado atual do array """
-        return self.__current_array
+        return self.__array
 
-    @property
-    def done(self):
+    @array.setter
+    def array(self, array: list):
+        """ Define um novo array para realizar o sort """
+        self.__array = array
+
+    @abstractmethod
+    def is_done(self):
         """ Se a ordenação já foi concluída """
-        return self.__done
+
+    @abstractmethod
+    def sort_new(self, array: list):
+        """ Define um novo array para realizar o sort """
 
     @abstractmethod
     def one_step(self):
@@ -40,72 +34,66 @@ class Algorithm(ABC):
 
 
 class Quicksort(Algorithm):
-    def __init__(self, array: list):
-        super().__init__(array)
-        self.__h = len(self.original_array)-1
-        self.__l = 0
-        self.__setup()
+    """ Implementação do algoritmo de quicksort utilizando um stack """
 
-    def __setup(self):
-        size = self.__h - self.__l + 1
-        self.__stack = [0] * (size)
+    def __init__(self):
+        super().__init__()
+        self.__stack: list[int] = []
+        self.__high = -1
+        self.__low = -1
         self.__top = -1
-        self.__top = self.__top + 1
-        self.__stack[self.__top] = self.__l
-        self.__top = self.__top + 1
-        self.__stack[self.__top] = self.__h
 
-    @property
-    def done(self):
+    def is_done(self):
         return self.__top <= 0
 
+    def sort_new(self, array: list):
+        self.array = array
+        self.__high = len(self.array) - 1
+        self.__low = 0
+        self.__stack = [0] * len(self.array)
+        self.__top = 0
+        self.__stack[self.__top] = self.__low
+        self.__top += 1
+        self.__stack[self.__top] = self.__high
+
+    def __switch_elements(self, i: int, j: int):
+        self.array[i], self.array[j] = self.array[j], self.array[i]
+
     def __partition(self):
-        i = (self.__l - 1)
-        x = self.current_array[self.__h]
+        high_value = self.array[self.__high]
 
-        for j in range(self.__l, self.__h):
-            if self.current_array[j] <= x:
-
-                # increment index of smaller element
-                i = i+1
-                self.current_array[i], self.current_array[j] = self.current_array[j], self.current_array[i]
-
-        self.current_array[i+1], self.current_array[self.__h] = self.current_array[self.__h], self.current_array[i+1]
-        return (i+1)
+        i = self.__low - 1
+        for j in range(self.__low, self.__high):
+            if self.array[j] <= high_value:
+                i += 1
+                self.__switch_elements(i, j)
+        i += 1
+        self.__switch_elements(i, self.__high)
+        return i
 
     def __aux(self):
-        # Pop h and l
-        self.__h = self.__stack[self.__top]
-        self.__top = self.__top - 1
-        self.__l = self.__stack[self.__top]
-        self.__top = self.__top - 1
+        self.__high = self.__stack[self.__top]
+        self.__top -= 1
+        self.__low = self.__stack[self.__top]
+        self.__top -= 1
 
-        # Set pivot element at its correct position in
-        # sorted array
-        p = self.__partition()
+        # Realiza o particionamento, recebendo o pivot
+        pivot = self.__partition()
 
-        # If there are elements on left side of pivot,
-        # then push left side to stack
-        if p-1 > self.__l:
-            self.__top = self.__top + 1
-            self.__stack[self.__top] = self.__l
-            self.__top = self.__top + 1
-            self.__stack[self.__top] = p - 1
+        # Se houverem elementos à esquerda do pivot, adicionamos ao stack
+        if pivot - 1 > self.__low:
+            self.__top += 1
+            self.__stack[self.__top] = self.__low
+            self.__top += 1
+            self.__stack[self.__top] = pivot - 1
 
-        # If there are elements on right side of pivot,
-        # then push right side to stack
-        if p+1 < self.__h:
-            self.__top = self.__top + 1
-            self.__stack[self.__top] = p + 1
-            self.__top = self.__top + 1
-            self.__stack[self.__top] = self.__h
-        self.__top = self.__top
-        self.__stack = self.__stack
+        # Se houverem elementos à direita do pivot, adicionamos ao stack
+        if pivot + 1 < self.__high:
+            self.__top += 1
+            self.__stack[self.__top] = pivot + 1
+            self.__top += 1
+            self.__stack[self.__top] = self.__high
 
-    # Function to do Quick sort
-    # arr[] --> Array to be sorted,
-    # l  --> Starting index,
-    # h  --> Ending index
     def one_step(self):
         if self.__top >= 0:
             self.__aux()

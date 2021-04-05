@@ -24,9 +24,10 @@ def main():
 
     player_array = InteractableNumberArray(array, (0, 155, 0))
 
-    enemy_algorithm = Quicksort(array)
-    enemy_array = NumberArray(array, (255, 0, 0))
-    enemy = Enemy(enemy_algorithm, enemy_array, 4.0)
+    enemy_algorithm = Quicksort()
+    enemy_array = NumberArray([], (255, 0, 0))
+    enemy = Enemy(enemy_algorithm, enemy_array, 1.0)
+    enemy.set_array(array)
 
     while True:
         inputs.update()

@@ -49,15 +49,15 @@ class Enemy:
 
     def set_array(self, array: list):
         """ Define um novo array para realizar a ordenação """
-        self.__algorithm.original_array = array
+        self.__algorithm.sort_new(array)
         self.__number_array.array = array
 
     def update(self, delta_time: float):
         """ Atualiza o timer e checa se o array deve ser organizado """
-        if self.__algorithm.done:
+        if self.__algorithm.is_done():
             return
         self.__update_timer(delta_time)
         if self.__should_sort():
             self.__time = 0
             self.__algorithm.one_step()
-            self.__number_array.array = self.__algorithm.current_array.copy()
+            self.__number_array.array = self.__algorithm.array.copy()
