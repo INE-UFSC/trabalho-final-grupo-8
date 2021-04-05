@@ -25,7 +25,7 @@ class DisplayManager:
 
     def tick(self) -> float:
         """ Atualiza o clock do jogo """
-        return self.__clock.tick(self.__framerate) * 0.001 * self.__framerate
+        return self.__clock.tick(self.__framerate) * 0.001
 
     def draw(self, surface: pg.Surface):
         """ Desenha uma superfície na janela """

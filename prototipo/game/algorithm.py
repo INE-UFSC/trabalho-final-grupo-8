@@ -17,6 +17,13 @@ class Algorithm(ABC):
         """ O estado original do array """
         return self.__original_array
 
+    @original_array.setter
+    def original_array(self, array: list):
+        """ Define um novo array para realizar o sort """
+        self.__original_array = array
+        self.__current_array = array
+        self.__done = False
+
     @property
     def current_array(self):
         """ O estado atual do array """
@@ -34,9 +41,8 @@ class Algorithm(ABC):
 
 class Quicksort(Algorithm):
     def __init__(self, array: list):
-        self.__original_array = array
-        self.__current_array = array
-        self.__h = len(self.__original_array)-1
+        super().__init__(array)
+        self.__h = len(self.original_array)-1
         self.__l = 0
         self.__setup()
 
@@ -55,16 +61,16 @@ class Quicksort(Algorithm):
 
     def __partition(self):
         i = (self.__l - 1)
-        x = self.__current_array[self.__h]
+        x = self.current_array[self.__h]
 
         for j in range(self.__l, self.__h):
-            if self.__current_array[j] <= x:
+            if self.current_array[j] <= x:
 
                 # increment index of smaller element
                 i = i+1
-                self.__current_array[i], self.__current_array[j] = self.__current_array[j], self.__current_array[i]
+                self.current_array[i], self.current_array[j] = self.current_array[j], self.current_array[i]
 
-        self.__current_array[i+1], self.__current_array[self.__h] = self.__current_array[self.__h], self.__current_array[i+1]
+        self.current_array[i+1], self.current_array[self.__h] = self.current_array[self.__h], self.current_array[i+1]
         return (i+1)
 
     def __aux(self):

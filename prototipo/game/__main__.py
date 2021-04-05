@@ -1,9 +1,12 @@
 """ Módulo de entrada do projeto """
 
 
+import random
 import pygame as pg
 from game.engine import DisplayManager, InputManager
 from game.number_array import InteractableNumberArray, NumberArray
+from game.enemy import Enemy
+from game.algorithm import Quicksort
 
 
 def main():
@@ -17,15 +20,21 @@ def main():
 
     surface = pg.Surface((200, 150))
 
-    player_array = InteractableNumberArray(range(10), (0, 155, 0))
-    enemy_array = NumberArray(range(200, 210), (255, 0, 0))
+    array = [random.randint(0, 100) for _ in range(10)]
+
+    player_array = InteractableNumberArray(array, (0, 155, 0))
+
+    enemy_algorithm = Quicksort(array)
+    enemy_array = NumberArray(array, (255, 0, 0))
+    enemy = Enemy(enemy_algorithm, enemy_array, 4.0)
 
     while True:
         inputs.update()
-        _ = display.tick()
+        delta_time = display.tick()
 
         surface.fill((0, 0, 0))
 
+        enemy.update(delta_time)
         player_array.handle_mouse(
             inputs.mouse_pos,
             "mouse_click" in inputs.pressed,

@@ -10,6 +10,7 @@ class NumberArray:
     """ Classe base para o array """
 
     def __init__(self, array: list, color: tuple[int, int, int] = (0, 0, 255)):
+        self.__color = color
         self.__array = list(map(lambda a: NumberBox(a, color), array))
         self.__order_changed = True
 
@@ -17,6 +18,11 @@ class NumberArray:
     def array(self):
         """ O array de caixas """
         return self.__array
+
+    @array.setter
+    def array(self, array: list):
+        self.__array = list(map(lambda a: NumberBox(a, self.__color), array))
+        self.__order_changed = True
 
     @property
     def order_changed(self):
