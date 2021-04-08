@@ -4,6 +4,7 @@
 from typing import Optional
 import pygame as pg
 from game.number_box import NumberBox
+from game.engine import InputManager
 
 
 class NumberArray:
@@ -103,19 +104,19 @@ class InteractableNumberArray(NumberArray):
                 break
         self.__dragging = None
 
-    def handle_mouse(self, mouse_pos: tuple, mouse_pressed: bool, mouse_just_pressed: bool):
+    def handle_mouse(self, inputs: InputManager):
         """ Atualiza conforme os inputs do mouse """
         box_under_cursor = None
         for box in self.array:
-            if box.rect.collidepoint(*mouse_pos):
+            if box.rect.collidepoint(*inputs.mouse_pos):
                 box_under_cursor = box
 
-        if mouse_just_pressed and self.__dragging is None:
+        if "drag" in inputs.just_pressed and self.__dragging is None:
             if box_under_cursor is not None:
                 self.__dragging = box_under_cursor
 
-        elif self.__dragging is not None and not mouse_pressed:
+        elif self.__dragging is not None and not "drag" in inputs.pressed:
             self.__drop_box()
 
         if self.__dragging is not None:
-            self.__dragging.rect.center = mouse_pos
+            self.__dragging.rect.center = inputs.mouse_pos

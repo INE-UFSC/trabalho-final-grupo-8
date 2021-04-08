@@ -14,8 +14,10 @@ def main():
 
     display = DisplayManager("Jogo dos Arrays", (200, 150))
     inputs = InputManager({
-        pg.K_SPACE: 'interact',
-        pg.MOUSEBUTTONDOWN: 'mouse_click'
+        'interact': 'space',
+        'click': 'mouse_click',
+        'drag': 'mouse_drag'
+        # pg.MOUSEBUTTONDOWN: 'mouse_click',
     })
 
     surface = pg.Surface((200, 150))
@@ -36,11 +38,7 @@ def main():
         surface.fill((0, 0, 0))
 
         enemy.update(delta_time)
-        player_array.handle_mouse(
-            inputs.mouse_pos,
-            "mouse_click" in inputs.pressed,
-            "mouse_click" in inputs.just_pressed
-        )
+        player_array.handle_mouse(inputs)
 
         enemy_array.draw(surface, 5, margin=5)
         player_array.draw(surface, 130, margin=5)
