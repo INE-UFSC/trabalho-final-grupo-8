@@ -17,12 +17,12 @@ class Menu:
                                     title_font_color=(29, 43, 82),
                                     widget_padding=25)
 
-        menu = pygame_menu.Menu("Jogo da Ordenacao", 800, 700, theme=mytheme)   # Mudar o nome do jogo? UTF-8
+        menu = pygame_menu.Menu("Sort it", 800, 700, theme=mytheme)   # Mudar o nome do jogo? UTF-8
 
-        self.__name = menu.add.text_input('Name :', font_color=(0, 0, 0))     # adicionar o player ao banco de dados.
-        self.__difficulty = menu.add.selector("dificuldade: ", [('Dificil', 3), ('Medio', 2), ('Facil', 1)], font_color=(0, 0, 0))
-        self.__mododeJogo = menu.add.selector("Modo de Jogo: ", [('tempo', 2), ('Movimentos', 1)], font_color=(0, 0, 0))
-        self.__ArrayParaOrdenar = menu.add.text_input('Array para ser ordenado :', font_color=(0, 0, 0))    # formatar.
+        self.__name = menu.add.text_input('Name :', font_color=(233, 245, 48))     # adicionar o player ao banco de dados.
+        self.__difficulty = menu.add.selector("dificuldade: ", [('Dificil', 3), ('Medio', 2), ('Facil', 1)], font_color=(233, 245, 48))
+        self.__mododeJogo = menu.add.selector("Modo de Jogo: ", [('tempo', 2), ('Movimentos', 1)], font_color=(233, 245, 48))
+        self.__ArrayParaOrdenar = menu.add.text_input('Array para ser ordenado :', font_color=(233, 245, 48))    # formatar.
         button1 = menu.add.button('Play', background_color=(40, 176, 255), font_color=(0, 0, 0))    # fazer o play funcionar.
         button2 = menu.add.button('Quit', pygame_menu.events.EXIT, background_color=(255, 2, 76), font_color=(0, 0, 0))
 

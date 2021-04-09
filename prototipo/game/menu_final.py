@@ -1,6 +1,7 @@
 import pygame
 import pygame_menu
-#from menu import Menu
+from menu import Menu
+from placar import Placar
 
 
 class Menu_final:
@@ -12,7 +13,7 @@ class Menu_final:
 
         surface = pygame.display.set_mode((1000, 800))     # Mexer na resolução.
 
-        x = "vitoria"
+        x = "derrota"
         txt = cor = menu = ""
         if x is "vitoria":
             mytheme = pygame_menu.Theme(background_color=(29, 43, 82),
@@ -38,11 +39,11 @@ class Menu_final:
 
         menu.add_label(txt, font_size=75, font_color=cor, font_name=pygame_menu.font.FONT_NEVIS, font_shadow=True)
 
-        button1 = menu.add.button('Menu',  background_color=(50, 170, 70), # Menu.menu() nao funciona
+        button1 = menu.add.button('Menu', Menu.menu(), pygame_menu.events.EXIT, background_color=(50, 170, 70), # Menu.menu() nao funciona
                                       font_color=(0, 0, 0))
 
-        button2 = menu.add.button('Placar', background_color=(50, 170, 70),
-                                      font_color=(0, 0, 0))
+        button2 = menu.add.button('Placar', Placar.exibirPlacar(), background_color=(50, 170, 70),
+                                      font_color=(0, 0, 0))     # Placar nao existe ainda.
         button2.set_float(True)
         button2.translate(100, 0)
         button1.translate(-100, 0)
