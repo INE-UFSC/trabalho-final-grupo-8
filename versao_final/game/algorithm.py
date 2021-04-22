@@ -2,13 +2,14 @@
 
 
 from abc import ABC, abstractmethod
+from typing import List
 
 
 class Algorithm(ABC):
     """ Base de um algoritmo """
 
     def __init__(self):
-        self.__array: list[int] = []
+        self.__array: List[int] = []
 
     @property
     def array(self):
@@ -16,7 +17,7 @@ class Algorithm(ABC):
         return self.__array
 
     @array.setter
-    def array(self, array: list):
+    def array(self, array: List[int]):
         """ Define um novo array para realizar o sort """
         self.__array = array
 
@@ -25,7 +26,7 @@ class Algorithm(ABC):
         """ Se a ordenação já foi concluída """
 
     @abstractmethod
-    def sort_new(self, array: list):
+    def sort_new(self, array: List[int]):
         """ Define um novo array para realizar o sort """
 
     @abstractmethod
@@ -38,7 +39,7 @@ class Quicksort(Algorithm):
 
     def __init__(self):
         super().__init__()
-        self.__stack: list[int] = []
+        self.__stack: List[int] = []
         self.__high = -1
         self.__low = -1
         self.__top = -1
@@ -46,7 +47,7 @@ class Quicksort(Algorithm):
     def is_done(self):
         return self.__top <= 0
 
-    def sort_new(self, array: list):
+    def sort_new(self, array: List[int]):
         self.array = array
         self.__high = len(self.array) - 1
         self.__low = 0

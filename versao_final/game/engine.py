@@ -2,13 +2,14 @@
 
 
 import sys
+from typing import Dict, Set, Tuple
 import pygame as pg
 
 
 class DisplayManager:
     """ Inicializa a janela """
 
-    def __init__(self, caption: str, resolution: tuple[int, int], framerate=60):
+    def __init__(self, caption: str, resolution: Tuple[int, int], framerate=60):
         pg.init()
         pg.font.init()
 
@@ -81,10 +82,10 @@ EVENT_STRINGS = {
 class InputManager:
     """ Gerencia as teclas pressionadas """
 
-    def __init__(self, mappings: dict[str, str]):
+    def __init__(self, mappings: Dict[str, str]):
         self.__mappings = {EVENT_STRINGS[k]: m for m, k in mappings.items()}
-        self.__pressed: set[str] = set()
-        self.__just_pressed: set[str] = set()
+        self.__pressed: Set[str] = set()
+        self.__just_pressed: Set[str] = set()
         self.__mouse_pos = (0, 0)
         self.__mouse_frames_pressed = 0
         self.__events: pg.EventList = None

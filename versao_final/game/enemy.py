@@ -1,38 +1,22 @@
 """ Módulo para gerar o inimigo """
 
 
+from typing import List
 from game.algorithm import Algorithm
-from game.number_array import NumberArray
-
-
-def get_array_differences(original: list, new: list):
-    """
-    Retorna os índices das diferenças entre duas listas.
-
-    Não utlizado na implementação atual.
-    """
-    differences: list[tuple[int, int]] = []
-    for index, _ in enumerate(original):
-        if original[index] != new[index]:
-            search_start = 0
-            new_index = -1
-            while True:
-                new_index = new.index(original[index], search_start)
-                if original[new_index] != new[new_index]:
-                    break
-                search_start = new_index + 1
-            if (new_index, index) not in differences:
-                differences.append((index, new_index))
-    return differences
+from game.numbers import NumberArray
 
 
 class Enemy:
     """ Classe responsável pela ordenação do array conforme um período de tempo especificado """
 
-    def __init__(self, algorithm: Algorithm, number_array: NumberArray, step_time: float):
+    def __init__(
+        self,
+        algorithm: Algorithm,
+        number_array: NumberArray,
+        step_time: float
+    ):
         self.__time = -1.0
         self.__step_time = step_time
-
         self.__algorithm = algorithm
         self.__number_array = number_array
 
@@ -47,7 +31,7 @@ class Enemy:
         """ Se o timer já está superior ao período que o inimigo deve esperar """
         return self.__time >= self.__step_time
 
-    def set_array(self, array: list):
+    def set_array(self, array: List[int]):
         """ Define um novo array para realizar a ordenação """
         self.__algorithm.sort_new(array)
         self.__number_array.array = array

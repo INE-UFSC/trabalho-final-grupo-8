@@ -4,7 +4,7 @@
 import random
 import pygame as pg
 from game.engine import DisplayManager, InputManager
-from game.number_array import InteractableNumberArray, NumberArray
+from game.numbers import InteractableNumberArray, NumberArray
 from game.enemy import Enemy
 from game.algorithm import Quicksort
 
