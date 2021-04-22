@@ -23,6 +23,11 @@ class DisplayManager:
         )
         self.tick()
 
+    @property
+    def window(self) -> pg.surface.Surface:
+        """ A superfície da janela """
+        return self.__window
+
     def tick(self) -> float:
         """ Atualiza o clock do jogo """
         return self.__clock.tick(self.__framerate) * 0.001
@@ -82,6 +87,12 @@ class InputManager:
         self.__just_pressed: set[str] = set()
         self.__mouse_pos = (0, 0)
         self.__mouse_frames_pressed = 0
+        self.__events: pg.EventList = None
+
+    @property
+    def events(self):
+        """ Os eventos do frame atual """
+        return self.__events
 
     @property
     def pressed(self):
@@ -111,7 +122,8 @@ class InputManager:
                     self.__just_pressed.add(action_name)
             self.__mouse_frames_pressed += 1
 
-        for event in pg.event.get():
+        self.__events = pg.event.get()
+        for event in self.__events:
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
