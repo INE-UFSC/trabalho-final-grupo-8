@@ -3,10 +3,10 @@
 
 from abc import ABC, abstractmethod
 from enum import IntEnum
-from game.utils import end
 from typing import Dict, Tuple
 import pygame as pg
 import pygame_gui
+from game.utils import end
 
 
 class UIState(IntEnum):
@@ -60,7 +60,7 @@ class MainMenu(UIScene):
     """ Representa o menu principal """
 
     def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
-        super().__init__(manager, size, object_id="#menu-background")
+        super().__init__(manager, size, "menu_background")
         pygame_gui.elements.UILabel(
             pg.Rect(0, 10, size[0], 48),
             "Sort it!",
@@ -72,13 +72,15 @@ class MainMenu(UIScene):
             pg.Rect(10, 100, (size[0] // 2) - 15, 40),
             "Jogar",
             manager,
-            container=self.container
+            container=self.container,
+            object_id="green_button"
         )
         self.__exit_button = pygame_gui.elements.UIButton(
             pg.Rect(size[0] // 2 + 5, 100, (size[0] // 2) - 15, 40),
             "Sair",
             manager,
-            container=self.container
+            container=self.container,
+            object_id="red_button"
         )
 
     def handle_event(self, event: pg.event.Event):
@@ -95,7 +97,7 @@ class SetupMenu(UIScene):
     """ Seleção do modo de jogo """
 
     def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
-        super().__init__(manager, size, object_id="#menu-background")
+        super().__init__(manager, size, "menu_background")
 
         pygame_gui.elements.UILabel(
             pg.Rect(10, 10, 40, 20),
@@ -141,13 +143,15 @@ class SetupMenu(UIScene):
             pg.Rect(10, 100, (size[0] // 2) - 15, 40),
             "Jogar",
             manager,
-            container=self.container
+            container=self.container,
+            object_id="green_button"
         )
         self.__back_button = pygame_gui.elements.UIButton(
             pg.Rect(size[0] // 2 + 5, 100, (size[0] // 2) - 15, 40),
             "Voltar",
             manager,
-            container=self.container
+            container=self.container,
+            object_id="red_button"
         )
 
     def handle_event(self, event: pg.event.Event):
@@ -185,11 +189,11 @@ class InGameMenu(UIScene):
 
         pygame_gui.elements.UILabel(
             pg.Rect(
-                size[0] - font.size("Robozão")[0],
+                size[0] - font.size("Robô")[0],
                 size[1] // 2 - 32,
-                *font.size("Robozão")
+                *font.size("Robô")
             ),
-            "Robozão",
+            "Robô",
             manager,
             container=self.container,
             object_id="red_label"
@@ -242,6 +246,10 @@ class UI:
     def state(self):
         """ Retorna o estado atual da interface gráfica """
         return self.__state
+
+    def in_game(self):
+        """ Se está no estado de jogo """
+        return self.__state == UIState.IN_GAME
 
     def change_state(self, next_state: UIState):
         """ Troca de estado """

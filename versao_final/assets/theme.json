@@ -1,24 +1,25 @@
 {
   "defaults": {
     "colours": {
-      "normal_bg": "#45494e",
-      "hovered_bg": "#35393e",
-      "disabled_bg": "#25292e",
-      "selected_bg": "#193754",
-      "dark_bg": "#15191e",
-      "normal_text": "#c5cbd8",
-      "hovered_text": "#FFFFFF",
-      "selected_text": "#FFFFFF",
-      "disabled_text": "#6d736f",
-      "link_text": "#0000EE",
-      "link_hover": "#2020FF",
-      "link_selected": "#551A8B",
-      "text_shadow": "#777777",
-      "normal_border": "#DDDDDD",
-      "hovered_border": "#B0B0B0",
-      "disabled_border": "#808080",
-      "selected_border": "#8080B0",
-      "active_border": "#8080B0",
+      "normal_bg": "#065ab5",
+      "hovered_bg": "#065ab5",
+      "disabled_bg": "#065ab5",
+      "selected_bg": "#1d2b53",
+      "active_bg": "#29adff",
+      "dark_bg": "#00000000",
+      "normal_text": "#fff1e8",
+      "hovered_text": "#fff1e8",
+      "selected_text": "#fff1e8",
+      "disabled_text": "#fff1e8",
+      "link_text": "#fff1e8",
+      "link_hover": "#fff1e8",
+      "link_selected": "#fff1e8",
+      "text_shadow": "#000000",
+      "normal_border": "#fff1e8",
+      "hovered_border": "#fff1e8",
+      "disabled_border": "#fff1e8",
+      "selected_border": "#fff1e8",
+      "active_border": "#fff1e8",
       "filled_bar": "#f4251b",
       "unfilled_bar": "#CCCCCC"
     }
@@ -32,6 +33,26 @@
     },
     "misc": {
       "shadow_width": "0"
+    }
+  },
+
+  "red_button": {
+    "prototype": "button",
+    "colours": {
+      "normal_bg": "#be1250",
+      "hovered_bg": "#be1250",
+      "disabled_bg": "#be1250",
+      "active_bg": "#ff004d"
+    }
+  },
+
+  "green_button": {
+    "prototype": "button",
+    "colours": {
+      "normal_bg": "#008751",
+      "hovered_bg": "#008751",
+      "disabled_bg": "#008751",
+      "active_bg": "#00e436"
     }
   },
 
@@ -95,7 +116,19 @@
     }
   },
 
+  "menu_background": {
+    "prototype": "panel",
+    "images": {
+      "background_image": {
+        "path": "assets/MenuBackground.png"
+      }
+    }
+  },
+
   "drop_down_menu": {
+    "colours": {
+      "normal_border": "#00000000"
+    },
     "misc": {
       "shadow_width": "0"
     }
@@ -107,7 +140,22 @@
       "hovered_text": "#00000000",
       "selected_text": "#00000000",
       "active_text": "#00000000",
-      "disabled_text": "#00000000"
+      "disabled_text": "#00000000",
+      "normal_bg": "#00000000",
+      "hovered_bg": "#00000000",
+      "disabled_bg": "#00000000",
+      "selected_bg": "#00000000",
+      "active_bg": "#00000000"
+    }
+  },
+
+  "drop_down_menu.#selected_option": {
+    "colours": {
+      "normal_bg": "#00000000",
+      "hovered_bg": "#00000000",
+      "disabled_bg": "#00000000",
+      "selected_bg": "#00000000",
+      "active_bg": "#00000000"
     }
   },
 

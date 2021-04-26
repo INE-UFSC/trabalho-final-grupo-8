@@ -7,7 +7,7 @@ from game.engine import DisplayManager, InputManager
 from game.numbers import InteractableNumberArray, NumberArray
 from game.enemy import Enemy
 from game.algorithm import Quicksort
-from game.gui import UI
+from game.ui import UI
 
 
 def main():
@@ -36,13 +36,14 @@ def main():
         surface.fill((0, 0, 0))
 
         gui.update(delta_time)
+
+        if gui.in_game():
+            enemy.update(delta_time)
+            player_array.handle_mouse(inputs)
+            enemy_array.draw(surface, 5, margin=5)
+            player_array.draw(surface, 130, margin=5)
+
         gui.draw(surface)
-
-        # enemy.update(delta_time)
-        # player_array.handle_mouse(inputs)
-        # enemy_array.draw(surface, 5, margin=5)
-        # player_array.draw(surface, 130, margin=5)
-
         display.draw(surface)
 
 
