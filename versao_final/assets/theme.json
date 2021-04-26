@@ -1,79 +1,98 @@
 {
-  "#default-label": {
+  "defaults": {
     "colours": {
-      "normal_text": "#ffffff",
-      "text_shadow": "#000000",
-      "dark_bg": "#00000000"
-    },
-    "font": {
-      "name": "MatchupPro",
-      "size": 16,
-      "regular_path": "assets/MatchupPro.ttf"
-    },
-    "misc": {
-      "text_shadow": "1",
-      "text_shadow_offset": "0,3"
+      "normal_bg": "#45494e",
+      "hovered_bg": "#35393e",
+      "disabled_bg": "#25292e",
+      "selected_bg": "#193754",
+      "dark_bg": "#15191e",
+      "normal_text": "#c5cbd8",
+      "hovered_text": "#FFFFFF",
+      "selected_text": "#FFFFFF",
+      "disabled_text": "#6d736f",
+      "link_text": "#0000EE",
+      "link_hover": "#2020FF",
+      "link_selected": "#551A8B",
+      "text_shadow": "#777777",
+      "normal_border": "#DDDDDD",
+      "hovered_border": "#B0B0B0",
+      "disabled_border": "#808080",
+      "selected_border": "#8080B0",
+      "active_border": "#8080B0",
+      "filled_bar": "#f4251b",
+      "unfilled_bar": "#CCCCCC"
     }
   },
-  "label": {
-    "prototype": "#default-label"
-  },
-  "#large-label": {
-    "prototype": "#default-label",
-    "font": {
-      "name": "MatchupPro",
-      "size": 48,
-      "regular_path": "assets/MatchupPro.ttf"
-    }
-  },
-  "#default-button": {
-    "colours": {
-      "normal_text": "#ffffff",
-      "hovered_text": "#ffffff",
-      "active_text": "#ffffff",
-      "normal_border": "#ffffff",
-      "hovered_border": "#ffffff",
-      "active_border": "#ffffff"
-    },
-    "font": {
-      "name": "MatchupPro",
-      "size": 32,
-      "regular_path": "assets/MatchupPro.ttf"
-    },
-    "misc": {
-      "border_width": "1"
-    }
-  },
-  "#green-button": {
-    "prototype": "#default-button",
-    "colours": {
-      "normal_bg": "#00e436",
-      "hovered_bg": "#00e436",
-      "active_bg": "#00b543",
-      "normal_border": "#00e436",
-      "hovered_border": "#ffffff",
-      "active_border": "#00b543"
-    }
-  },
-  "#red-button": {
-    "prototype": "#default-button",
-    "colours": {
-      "normal_bg": "#ff004d",
-      "hovered_bg": "#ff004d",
-      "active_bg": "#be1250",
-      "normal_border": "#ff004d",
-      "hovered_border": "#ffffff",
-      "active_border": "#be1250"
-    }
-  },
+
   "button": {
-    "prototype": "#default-button"
+    "font": {
+      "name": "OpenSansPXBold",
+      "size": 16,
+      "regular_path": "assets/OpenSansPXBold.ttf"
+    },
+    "misc": {
+      "shadow_width": "0"
+    }
   },
-  "#menu-background": {
-    "images": {
-      "background_image": {
-        "path": "assets/MenuBackground.png"
-      }
+
+  "label": {
+    "font": {
+      "name": "OpenSansPXBold",
+      "size": 16,
+      "regular_path": "assets/OpenSansPXBold.ttf"
+    },
+    "misc": {
+      "shadow_width": "0"
+    }
+  },
+
+  "title": {
+    "prototype": "label",
+    "font": {
+      "name": "OpenSansPXBold",
+      "size": 48,
+      "regular_path": "assets/OpenSansPXBold.ttf"
+    }
+  },
+
+  "text_entry_line": {
+    "font": {
+      "name": "OpenSansPXBold",
+      "size": 16,
+      "regular_path": "assets/OpenSansPXBold.ttf"
+    },
+    "misc": {
+      "border_width": "0",
+      "shadow_width": "0"
+    }
+  },
+
+  "panel": {
+    "misc": {
+      "border_width": "0",
+      "shadow_width": "0"
+    }
+  },
+
+  "drop_down_menu": {
+    "misc": {
+      "shadow_width": "0"
+    }
+  },
+
+  "drop_down_menu.#expand_button": {
+    "colours": {
+      "normal_text": "#00000000",
+      "hovered_text": "#00000000",
+      "selected_text": "#00000000",
+      "active_text": "#00000000",
+      "disabled_text": "#00000000"
+    }
+  },
+
+  "selection_list": {
+    "misc": {
+      "shadow_width": "0"
     }
   }
 }

@@ -48,25 +48,23 @@ class MainMenu(UIScene):
     def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
         super().__init__(manager, size, object_id="#menu-background")
         pygame_gui.elements.UILabel(
-            pg.Rect(0, 20, size[0], 48),
+            pg.Rect(0, 10, size[0], 48),
             "Sort it!",
             manager,
             container=self.container,
-            object_id="#large-label"
+            object_id="title"
         )
         self.__play_button = pygame_gui.elements.UIButton(
-            pg.Rect(10, 80, 80, 32),
+            pg.Rect(10, 100, (size[0] // 2) - 15, 40),
             "Jogar",
             manager,
-            container=self.container,
-            object_id="#green-button"
+            container=self.container
         )
         self.__exit_button = pygame_gui.elements.UIButton(
-            pg.Rect(100, 80, 80, 32),
+            pg.Rect(size[0] // 2 + 5, 100, (size[0] // 2) - 15, 40),
             "Sair",
             manager,
-            container=self.container,
-            object_id="#red-button"
+            container=self.container
         )
 
     def handle_event(self, event: pg.event.Event):
@@ -76,6 +74,69 @@ class MainMenu(UIScene):
                     print("Play")
                 elif event.ui_element == self.__exit_button:
                     print("Exit")
+
+
+class SetupMenu(UIScene):
+    """ Seleção do modo de jogo """
+
+    def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
+        super().__init__(manager, size, object_id="#menu-background")
+
+        pygame_gui.elements.UILabel(
+            pg.Rect(10, 10, 40, 20),
+            "Nome:",
+            manager,
+            container=self.container
+        )
+        pygame_gui.elements.UITextEntryLine(
+            pg.Rect(50, 10, size[0] - 60, 20),
+            manager,
+            container=self.container
+        ).set_text("John Doe")
+
+        pygame_gui.elements.UILabel(
+            pg.Rect(10, 40, 40, 20),
+            "Modo:",
+            manager,
+            container=self.container
+        )
+        pygame_gui.elements.UIDropDownMenu(
+            ["Movimentos", "Tempo"],
+            "Movimentos",
+            pg.Rect(50, 40, size[0]-60, 20),
+            manager,
+            container=self.container,
+        )
+
+        pygame_gui.elements.UILabel(
+            pg.Rect(10, 70, 70, 20),
+            "Algoritmo:",
+            manager,
+            container=self.container
+        )
+        pygame_gui.elements.UIDropDownMenu(
+            ["Quick Sort", "Bubble Sort"],
+            "Quick Sort",
+            pg.Rect(80, 70, size[0]-90, 20),
+            manager,
+            container=self.container
+        )
+
+        pygame_gui.elements.UIButton(
+            pg.Rect(10, 100, (size[0] // 2) - 15, 40),
+            "Jogar",
+            manager,
+            container=self.container
+        )
+        pygame_gui.elements.UIButton(
+            pg.Rect(size[0] // 2 + 5, 100, (size[0] // 2) - 15, 40),
+            "Voltar",
+            manager,
+            container=self.container
+        )
+
+    def handle_event(self, event: pg.event.Event):
+        pass
 
 
 class UI:
@@ -88,6 +149,7 @@ class UI:
         self.__current_layout = "MainMenu"
         self.__layouts = {
             "MainMenu": MainMenu(self.__manager, size)
+            # "SetupMenu": SetupMenu(self.__manager, size)
         }
 
     def update(self, delta_time: float):
