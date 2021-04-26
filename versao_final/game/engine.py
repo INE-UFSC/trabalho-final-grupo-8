@@ -1,9 +1,9 @@
 """ Classes de gerenciamento """
 
 
-import sys
-from typing import Dict, Set, Tuple
+from typing import Callable, Dict, Set, Tuple
 import pygame as pg
+from game.utils import end
 
 
 class DisplayManager:
@@ -110,11 +110,8 @@ class InputManager:
         """ A posição do mouse """
         return self.__mouse_pos
 
-    def update(self):
-        """ Atualiza as teclas """
-        self.__just_pressed.clear()
+    def __update_mouse_state(self):
         self.__mouse_pos = pg.mouse.get_pos()
-
         if self.__mappings.get(pg.MOUSEBUTTONDOWN) in self.__pressed:
             if self.__mouse_frames_pressed == 5:
                 action_name = self.__mappings.get(MOUSE_DRAG)
@@ -123,11 +120,16 @@ class InputManager:
                     self.__just_pressed.add(action_name)
             self.__mouse_frames_pressed += 1
 
+    def update(self, custom_functions: list[Callable]):
+        """ Atualiza as teclas """
+        self.__just_pressed.clear()
+
+        self.__update_mouse_state()
+
         self.__events = pg.event.get()
         for event in self.__events:
             if event.type == pg.QUIT:
-                pg.quit()
-                sys.exit()
+                end()
             elif event.type in (pg.KEYDOWN, pg.KEYUP) and event.key in self.__mappings:
                 action_name = self.__mappings[event.key]
                 if event.type == pg.KEYDOWN:
@@ -149,3 +151,5 @@ class InputManager:
                     drag_action_name = self.__mappings.get(MOUSE_DRAG)
                     if drag_action_name in self.__pressed:
                         self.__pressed.remove(drag_action_name)
+            for function in custom_functions:
+                function(event)
