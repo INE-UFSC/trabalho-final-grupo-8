@@ -141,5 +141,5 @@ class Bubblesort(Algorithm):
 
                 # Caso seja igual ao comprimento da lista, o array esta ordenado:
                 if self.__total_higher == len(self.__array)-1:
-                    self.__is_done = True
+                    self.__is_done = True   # A ordenacao acabou.
 
