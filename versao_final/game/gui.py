@@ -139,6 +139,63 @@ class SetupMenu(UIScene):
         pass
 
 
+class InGameMenu(UIScene):
+    """ Tela a ser mostrada durante o jogo """
+
+    def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
+        super().__init__(manager, size)
+        pygame_gui.elements.UILabel(
+            pg.Rect(0, size[1] // 2 - 32, 8 * len("John Doe"), 16),
+            "John Doe",
+            manager,
+            container=self.container
+        )
+        pygame_gui.elements.UILabel(
+            pg.Rect(0, size[1] // 2 - 16, 8 * len("1642"), 16),
+            "1642",
+            manager,
+            container=self.container
+        )
+
+        pygame_gui.elements.UILabel(
+            pg.Rect(
+                size[0] - 8 * len("Robozão"),
+                size[1] // 2 - 32,
+                8 * len("Robozão"),
+                16
+            ),
+            "Robozão",
+            manager,
+            container=self.container
+        )
+        pygame_gui.elements.UILabel(
+            pg.Rect(
+                size[0] - 8 * len("437"),
+                size[1] // 2 - 16,
+                8 * len("437"),
+                16
+            ),
+            "437",
+            manager,
+            container=self.container
+        )
+
+        pygame_gui.elements.UILabel(
+            pg.Rect(
+                size[0] // 2 - 20,
+                size[1] // 2,
+                40,
+                16
+            ),
+            "1:53",
+            manager,
+            container=self.container
+        )
+
+    def handle_event(self, event: pg.event.Event):
+        pass
+
+
 class UI:
     """ Envolve o módulo pygame_gui """
 
@@ -146,10 +203,11 @@ class UI:
         self.__manager = pygame_gui.UIManager(
             size, theme_path="./assets/theme.json"
         )
-        self.__current_layout = "MainMenu"
+        self.__current_layout = "InGameMenu"
         self.__layouts = {
-            "MainMenu": MainMenu(self.__manager, size)
+            # "MainMenu": MainMenu(self.__manager, size)
             # "SetupMenu": SetupMenu(self.__manager, size)
+            "InGameMenu": InGameMenu(self.__manager, size)
         }
 
     def update(self, delta_time: float):
