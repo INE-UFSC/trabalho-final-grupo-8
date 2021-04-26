@@ -46,6 +46,27 @@
     }
   },
 
+  "red_label": {
+    "prototype": "label",
+    "colours": {
+      "normal_text": "#ff004d"
+    }
+  },
+
+  "blue_label": {
+    "prototype": "label",
+    "colours": {
+      "normal_text": "#29adff"
+    }
+  },
+
+  "yellow_label": {
+    "prototype": "label",
+    "colours": {
+      "normal_text": "#ffec27"
+    }
+  },
+
   "title": {
     "prototype": "label",
     "font": {

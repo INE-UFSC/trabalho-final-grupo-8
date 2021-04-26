@@ -2,9 +2,20 @@
 
 
 from abc import ABC, abstractmethod
-from typing import Tuple
+from enum import IntEnum
+from game.utils import end
+from typing import Dict, Tuple
 import pygame as pg
 import pygame_gui
+
+
+class UIState(IntEnum):
+    """ Estados possíveis da interface """
+    MAIN_MENU = 0
+    SETUP_MENU = 1
+    IN_GAME = 2
+    VICTORY = 3
+    DEFEAT = 4
 
 
 class UIScene(ABC):
@@ -23,9 +34,10 @@ class UIScene(ABC):
             manager,
             object_id=object_id
         )
+        self.disable()
 
     @abstractmethod
-    def handle_event(self, event: pg.event.Event):
+    def handle_event(self, event: pg.event.Event) -> UIState:
         """ O que deve ser feito para os eventos """
 
     @property
@@ -36,10 +48,12 @@ class UIScene(ABC):
     def enable(self):
         """ Ativa a interface """
         self.__container.enable()
+        self.__container.show()
 
     def disable(self):
         """ Desativa a interface """
         self.__container.disable()
+        self.__container.hide()
 
 
 class MainMenu(UIScene):
@@ -71,9 +85,10 @@ class MainMenu(UIScene):
         if event.type == pg.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.__play_button:
-                    print("Play")
-                elif event.ui_element == self.__exit_button:
-                    print("Exit")
+                    return UIState.SETUP_MENU
+                if event.ui_element == self.__exit_button:
+                    end()
+        return UIState.MAIN_MENU
 
 
 class SetupMenu(UIScene):
@@ -122,13 +137,13 @@ class SetupMenu(UIScene):
             container=self.container
         )
 
-        pygame_gui.elements.UIButton(
+        self.__play_button = pygame_gui.elements.UIButton(
             pg.Rect(10, 100, (size[0] // 2) - 15, 40),
             "Jogar",
             manager,
             container=self.container
         )
-        pygame_gui.elements.UIButton(
+        self.__back_button = pygame_gui.elements.UIButton(
             pg.Rect(size[0] // 2 + 5, 100, (size[0] // 2) - 15, 40),
             "Voltar",
             manager,
@@ -136,7 +151,13 @@ class SetupMenu(UIScene):
         )
 
     def handle_event(self, event: pg.event.Event):
-        pass
+        if event.type == pg.USEREVENT:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.__play_button:
+                    return UIState.IN_GAME
+                if event.ui_element == self.__back_button:
+                    return UIState.MAIN_MENU
+        return UIState.SETUP_MENU
 
 
 class InGameMenu(UIScene):
@@ -144,40 +165,45 @@ class InGameMenu(UIScene):
 
     def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
         super().__init__(manager, size)
+
+        font = manager.get_theme().get_font_dictionary().find_font(16, "MatchupPro")
+
         pygame_gui.elements.UILabel(
-            pg.Rect(0, size[1] // 2 - 32, 8 * len("John Doe"), 16),
+            pg.Rect(0, size[1] // 2 - 32, *font.size("John Doe")),
             "John Doe",
             manager,
-            container=self.container
+            container=self.container,
+            object_id="blue_label"
         )
         pygame_gui.elements.UILabel(
-            pg.Rect(0, size[1] // 2 - 16, 8 * len("1642"), 16),
+            pg.Rect(0, size[1] // 2 - 16, *font.size("1642")),
             "1642",
             manager,
-            container=self.container
+            container=self.container,
+            object_id="blue_label"
         )
 
         pygame_gui.elements.UILabel(
             pg.Rect(
-                size[0] - 8 * len("Robozão"),
+                size[0] - font.size("Robozão")[0],
                 size[1] // 2 - 32,
-                8 * len("Robozão"),
-                16
+                *font.size("Robozão")
             ),
             "Robozão",
             manager,
-            container=self.container
+            container=self.container,
+            object_id="red_label"
         )
         pygame_gui.elements.UILabel(
             pg.Rect(
-                size[0] - 8 * len("437"),
+                size[0] - font.size("437")[0],
                 size[1] // 2 - 16,
-                8 * len("437"),
-                16
+                *font.size("437")
             ),
             "437",
             manager,
-            container=self.container
+            container=self.container,
+            object_id="red_label"
         )
 
         pygame_gui.elements.UILabel(
@@ -189,11 +215,12 @@ class InGameMenu(UIScene):
             ),
             "1:53",
             manager,
-            container=self.container
+            container=self.container,
+            object_id="yellow_label"
         )
 
     def handle_event(self, event: pg.event.Event):
-        pass
+        return UIState.IN_GAME
 
 
 class UI:
@@ -203,12 +230,24 @@ class UI:
         self.__manager = pygame_gui.UIManager(
             size, theme_path="./assets/theme.json"
         )
-        self.__current_layout = "InGameMenu"
-        self.__layouts = {
-            # "MainMenu": MainMenu(self.__manager, size)
-            # "SetupMenu": SetupMenu(self.__manager, size)
-            "InGameMenu": InGameMenu(self.__manager, size)
+        self.__state: UIState = UIState.MAIN_MENU
+        self.__layouts: Dict[UIState, UIScene] = {
+            UIState.MAIN_MENU: MainMenu(self.__manager, size),
+            UIState.SETUP_MENU: SetupMenu(self.__manager, size),
+            UIState.IN_GAME: InGameMenu(self.__manager, size)
         }
+        self.__layouts[self.__state].enable()
+
+    @property
+    def state(self):
+        """ Retorna o estado atual da interface gráfica """
+        return self.__state
+
+    def change_state(self, next_state: UIState):
+        """ Troca de estado """
+        self.__layouts[self.__state].disable()
+        self.__state = next_state
+        self.__layouts[self.__state].enable()
 
     def update(self, delta_time: float):
         """ Atualiza conforme o delta time """
@@ -216,8 +255,10 @@ class UI:
 
     def handle_event(self, event):
         """ Lida com um evento específico """
-        self.__layouts[self.__current_layout].handle_event(event)
+        next_state = self.__layouts[self.__state].handle_event(event)
         self.__manager.process_events(event)
+        if next_state != self.__state:
+            self.change_state(next_state)
 
     def draw(self, surface: pg.Surface):
         """ Desenha a interface apropriada na superfície """

@@ -1,9 +1,9 @@
 """ Classes de gerenciamento """
 
 
-import sys
-from typing import Any, Callable, Dict, List, Set, Tuple
+from typing import Callable, Dict, Set, Tuple
 import pygame as pg
+from game.utils import end
 
 
 class DisplayManager:
@@ -129,8 +129,7 @@ class InputManager:
         self.__events = pg.event.get()
         for event in self.__events:
             if event.type == pg.QUIT:
-                pg.quit()
-                sys.exit()
+                end()
             elif event.type in (pg.KEYDOWN, pg.KEYUP) and event.key in self.__mappings:
                 action_name = self.__mappings[event.key]
                 if event.type == pg.KEYDOWN:
