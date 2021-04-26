@@ -97,3 +97,49 @@ class Quicksort(Algorithm):
     def one_step(self):
         if self.__top >= 0:
             self.__aux()
+
+
+class Bubblesort(Algorithm):
+    """ Implementação do algoritmo de bubblesort """
+
+    def __init__(self):
+        super().__init__()
+        self.__is_done = False
+        self.__total_higher = 0
+        self.__actual = 0
+        self.__next_position = 0
+        self.__less = 1
+
+    def is_done(self):
+        return self.__is_done
+
+    def sort_new(self, array: list):
+        self.__array = array
+        self.__is_done = False
+        self.__total_higher = 0
+        self.__actual = 0
+        self.__next_position = 0
+        self.__less = 1
+
+    def one_step(self):
+        ''' ordenacao de apenas um passo '''
+
+        for i in range(self.__next_position, len(self.__array) - 1):
+            if self.__array[i] > self.__array[i + 1]:
+                self.__array[i], self.__array[i+1] = self.__array[i+1], self.__array[i]     # Faz a troca de posicao.
+                self.__total_higher = 0                 # Reset da variavel auxiliar.
+                self.__next_position = i + 1            # posicao de partida do proximo looping.
+
+                # Caso o valor atinja sua posicao correta no array ordenado:
+                if self.__next_position == len(self.__array) - self.__less:
+                    self.__next_position = 0    # A variavel auxiliar de partida sofre reset.
+                    self.__less += 1   # E a posicao correta do proximo termo e uma anterior a do ultimo termo ordenado.
+                break
+
+            else:                           # Caso o proximo valor nao seja menor que o atual.
+                self.__total_higher += 1    # Variavel auxiliar conta quantas vezes isso ocorre.
+
+                # Caso seja igual ao comprimento da lista, o array esta ordenado:
+                if self.__total_higher == len(self.__array)-1:
+                    self.__is_done = True
+
