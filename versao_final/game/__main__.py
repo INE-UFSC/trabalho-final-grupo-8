@@ -6,7 +6,7 @@ import pygame as pg
 from game.engine import DisplayManager, InputManager
 from game.numbers import InteractableNumberArray, NumberArray
 from game.enemy import Enemy
-from game.algorithm import Quicksort
+from game.algorithm import BubbleSort
 from game.ui import UI
 
 
@@ -25,7 +25,7 @@ def main():
 
     array = [random.randint(0, 100) for _ in range(10)]
     player_array = InteractableNumberArray(array, (0, 155, 0))
-    enemy_algorithm = Quicksort()
+    enemy_algorithm = BubbleSort()
     enemy_array = NumberArray([], (255, 0, 0))
     enemy = Enemy(enemy_algorithm, enemy_array, 1.0)
     enemy.set_array(array)
