@@ -1,9 +1,32 @@
 """ Módulo para gerar o inimigo """
 
 
-from typing import List
+from abc import ABC, abstractmethod
 from game.algorithm import Algorithm
-from game.numbers import NumberArray
+from game.array import Array
+from game.utils import Timer
+
+
+class Behaviour(ABC):
+    """ Como o inimigo se comporta """
+
+    @abstractmethod
+    def should_update(self) -> bool:
+        """ Retorna se o inimigo deve ser atualizado """
+
+
+class TimedBehaviour(Behaviour):
+    """
+    O inimigo é atualizado conforme um
+    determinado período de tempo
+    """
+
+    def __init__(self, timer: Timer):
+        self.__timer = timer
+
+    def should_update(self) -> bool:
+        """ Se o timer já está superior ao período que o inimigo deve esperar """
+        return self.__timer.timeout
 
 
 class Enemy:
@@ -11,37 +34,19 @@ class Enemy:
 
     def __init__(
         self,
+        array: Array,
         algorithm: Algorithm,
-        number_array: NumberArray,
-        step_time: float
+        behaviour: Behaviour
     ):
-        self.__time = -1.0
-        self.__step_time = step_time
         self.__algorithm = algorithm
-        self.__number_array = number_array
+        self.__array = array
+        self.__behaviour = behaviour
+        self.__algorithm.sort_new([box.number for box in self.__array.numbers])
 
-    def __update_timer(self, increment: float):
-        """ Atualiza o timer, iniciando caso não tenha iniciado """
-        if self.__time == -1:
-            self.__time = 0
-        else:
-            self.__time += increment
-
-    def __should_sort(self):
-        """ Se o timer já está superior ao período que o inimigo deve esperar """
-        return self.__time >= self.__step_time
-
-    def set_array(self, array: List[int]):
-        """ Define um novo array para realizar a ordenação """
-        self.__algorithm.sort_new(array)
-        self.__number_array.array = array
-
-    def update(self, delta_time: float):
+    def update(self):
         """ Atualiza o timer e checa se o array deve ser organizado """
         if self.__algorithm.is_done():
             return
-        self.__update_timer(delta_time)
-        if self.__should_sort():
-            self.__time = 0
+        if self.__behaviour.should_update():
             self.__algorithm.one_step()
-            self.__number_array.array = self.__algorithm.array.copy()
+            self.__array.numbers = self.__algorithm.array.copy()

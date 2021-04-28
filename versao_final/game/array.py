@@ -22,6 +22,11 @@ class Box:
         self.__dragged = False
 
     @property
+    def number(self):
+        """ O número representado pela caixa """
+        return self.__number
+
+    @property
     def rect(self):
         """ A bounding box da caixa """
         return self.__rect

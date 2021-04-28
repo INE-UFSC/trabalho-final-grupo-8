@@ -1,15 +1,14 @@
 """ Módulo de entrada do projeto """
 
 
-from game.player import Player
-import random
 import pygame as pg
-from game.engine import DisplayManager, InputManager
-# from game.numbers import InteractableNumberArray, NumberArray
+from game.algorithm import Quicksort
 from game.array import BoxFactory, Array
-from game.enemy import Enemy
-from game.algorithm import SelectionSort
+from game.enemy import Enemy, TimedBehaviour
+from game.engine import DisplayManager, InputManager
+from game.player import Player
 from game.ui import UI
+from game.utils import Timer
 
 
 def main():
@@ -30,35 +29,28 @@ def main():
     font = pg.font.Font('./assets/OpenSansPXBold.ttf', 16)
 
     player_array = Array(BoxFactory(blue_box, font), y_pos=134)
+    enemy_array = Array(BoxFactory(red_box, font), y_pos=0)
+
+    player_array.numbers = [0, 10, 8, 2, 1, 5]
+    enemy_array.numbers = [0, 10, 8, 2, 1, 5]
+
     player = Player(player_array, inputs)
-
-    enemy = Array(BoxFactory(red_box, font), y_pos=0)
-
-    player_array.numbers = [0, 1, 2, 3, 4, 5]
-    enemy.numbers = [0, 1, 2, 3, 4, 5]
-
-    # array = [random.randint(0, 100) for _ in range(10)]
-    # player_array = InteractableNumberArray(array, (0, 155, 0))
-    # enemy_algorithm = SelectionSort()
-    # enemy_array = NumberArray([], (255, 0, 0))
-    # enemy = Enemy(enemy_algorithm, enemy_array, 1.0)
-    # enemy.set_array(array)
+    enemy_timer = Timer(1.0, auto_start=True, one_shot=False)
+    enemy = Enemy(enemy_array, Quicksort(), TimedBehaviour(enemy_timer))
 
     while True:
         inputs.update([gui.handle_event])
         delta_time = display.tick()
+        enemy_timer.update(delta_time)
         surface.fill((50, 50, 50))
 
         gui.update(delta_time)
 
         if gui.in_game():
             player.update()
+            enemy.update()
             player_array.draw(surface)
-            enemy.draw(surface)
-            # enemy.update(delta_time)
-            # player_array.handle_mouse(inputs)
-            # enemy_array.draw(surface, 5, margin=5)
-            # player_array.draw(surface, 130, margin=5)
+            enemy_array.draw(surface)
 
         gui.draw(surface)
         display.draw(surface)
