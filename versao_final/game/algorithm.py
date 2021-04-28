@@ -100,56 +100,56 @@ class Quicksort(Algorithm):
             self.__aux()
 
 
-class BubbleSort(Algorithm):
-    """
-    Implementação do algoritmo de bubblesort:
-    O algoritmo percorre o array diversas vezes,
-    e a cada passagem fazer flutuar para o topo o
-    maior elemento da sequencia.
-    """
+class Bubblesort(Algorithm):
+    """ Implementação do algoritmo de bubblesort:
+        O algoritmo percorre o array diversas vezes,
+        e a cada passagem fazer flutuar para o topo
+        o maior elemento da sequencia."""
 
     def __init__(self):
         super().__init__()
         self.__is_done = False
-        self.__total_higher = 0
+        self.__actual = 0
         self.__next_position = 0
         self.__less = 1
 
     def is_done(self):
         return self.__is_done
 
+    def array(self):
+        print(self.__array)
+
     def sort_new(self, array: list):
-        self.array = array
+        self.__array = array
         self.__is_done = False
-        self.__total_higher = 0
+        self.__actual = 0
         self.__next_position = 0
         self.__less = 1
 
     def one_step(self):
-        for i in range(self.__next_position, len(self.array) - 1):
-            if self.array[i] > self.array[i + 1]:
-                # Faz a troca de posicao.
-                self.array[i], self.array[i +
-                                          1] = self.array[i+1], self.array[i]
-                # Reset da variavel auxiliar.
-                self.__total_higher = 0
-                # Posicao de partida do proximo looping e averiguacao de posicao.
-                self.__next_position = i + 1
+        ''' ordenacao de apenas um passo '''
+
+        # Reset de variaveis auxiliares:
+        self.__actual = 0
+        self.__next_position = 0
+        self.__less = 1
+        # Laco principal onde ocorrem as trocas:
+        for i in range(self.__next_position, len(self.__array) - 1):
+            if self.__array[i] > self.__array[i + 1]:
+                self.__array[i], self.__array[i + 1] = self.__array[i + 1], self.__array[i]  # Faz a troca de posicao.
+                self.__next_position = i + 1  # posicao de partida do proximo looping.
 
                 # Caso o valor atinja sua posicao correta no array ordenado:
-                if self.__next_position == len(self.array) - self.__less:
-                    # A variavel auxiliar de partida sofre reset.
-                    self.__next_position = 0
-                    # E a posicao correta do proximo termo e uma
-                    # anterior a do ultimo termo ordenado.
-                    self.__less += 1
+                if self.__next_position == len(self.__array) - self.__less:
+                    self.__next_position = 0  # A variavel auxiliar de partida sofre reset.
+                    self.__less += 1  # E a posicao correta do proximo termo e uma anterior a do ultimo termo ordenado.
                 break
-            # Variavel auxiliar conta quantas vezes isso ocorre.
-            self.__total_higher += 1
 
-            # Caso seja igual ao comprimento da lista, o array esta ordenado:
-            if self.__total_higher == len(self.array)-1:
-                self.__is_done = True
+            # Caso o proximo valor nao seja menor que o atual:
+            else:
+                # Caso o array esteja ordenado:
+                if self.__array == sorted(self.__array):
+                    self.__is_done = True  # A ordenacao acabou.
 
 
 class SelectionSort(Algorithm):
