@@ -1,13 +1,14 @@
 """ Módulo de entrada do projeto """
 
 
+from game.command import SwapCommandFactory
 import pygame as pg
-from game.algorithm import RecursiveQuicksort
+from game.algorithm import HoarePartitionScheme, RecursiveQuicksort, HoarePartitionScheme
 from game.array import BoxFactory, Array
 from game.enemy import Enemy, TimedBehaviour
 from game.engine import DisplayManager, InputManager
 from game.player import Player
-from game.ui import UI
+# from game.ui import UI
 from game.utils import Timer
 
 
@@ -37,7 +38,12 @@ def main():
     player = Player(player_array, inputs)
     enemy_timer = Timer(1.0, auto_start=True, one_shot=False)
     enemy = Enemy(
-        RecursiveQuicksort(enemy_array),
+        RecursiveQuicksort(
+            HoarePartitionScheme(
+                SwapCommandFactory(enemy_array)
+            ),
+            enemy_array
+        ),
         TimedBehaviour(enemy_timer)
     )
 

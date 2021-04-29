@@ -26,3 +26,27 @@ class SwapCommand(Command):
             (array[self.__origin],
              array[self.__destination]) = (array[self.__destination],
                                            array[self.__origin])
+
+
+class CommandFactory(ABC):
+    """ Classe criadora de comandos """
+
+    @abstractmethod
+    def create(self, origin: int, destination: int) -> Command:
+        """
+        Cria um novo comando
+
+        Por enquanto todos deverão receber a posição
+        inicial e a posição final, no entanto caso
+        seja necessário isso poderá ser alterado.
+        """
+
+
+class SwapCommandFactory(CommandFactory):
+    """ Classe criadora de comandos de troca de posições """
+
+    def __init__(self, array: Array):
+        self.__array = array
+
+    def create(self, origin: int, destination: int):
+        return SwapCommand(self.__array, origin, destination)
