@@ -2,7 +2,7 @@
 
 
 from abc import ABC, abstractmethod
-from game.algorithm import Algorithm
+from game.algorithm import NewAlgorithm
 from game.utils import Timer
 
 
@@ -33,15 +33,19 @@ class Enemy:
 
     def __init__(
         self,
-        algorithm: Algorithm,
+        algorithm: NewAlgorithm,
         behaviour: Behaviour
     ):
         self.__algorithm = algorithm
         self.__behaviour = behaviour
+        self.__step_by_step = algorithm.one_step()
 
     def update(self):
         """ Atualiza o timer e checa se o array deve ser organizado """
         if self.__algorithm.is_done():
             return
         if self.__behaviour.should_update():
-            self.__algorithm.one_step()
+            try:
+                next(self.__step_by_step).execute()
+            except StopIteration:  # Ordenação finalizou...
+                pass

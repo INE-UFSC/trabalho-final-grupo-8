@@ -143,19 +143,3 @@ class Array:
         (self.__numbers[origin], self.__numbers[destination]) = (
             self.__numbers[destination], self.__numbers[origin]
         )
-
-
-class SwapCommand:
-    """ Troca duas posições do array """
-
-    def __init__(self, array: Array, origin: int, destination: int):
-        self.__array = array
-        self.__origin = origin
-        self.__destination = destination
-
-    def execute(self):
-        """ Executa a operação """
-        for array in [self.__array.boxes, self.__array.numbers]:
-            (array[self.__origin],
-             array[self.__destination]) = (array[self.__destination],
-                                           array[self.__origin])

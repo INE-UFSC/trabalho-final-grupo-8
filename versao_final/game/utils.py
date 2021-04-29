@@ -2,6 +2,7 @@
 
 
 import sys
+from typing import List
 import pygame as pg
 
 
@@ -9,6 +10,16 @@ def end():
     """ Finaliza o pygame e encerra o processo """
     pg.quit()
     sys.exit()
+
+
+def is_sorted(array: List[float]):
+    """ Percorre o array checando se o mesmo está organizado """
+    if len(array) in [0 or 1]:
+        return True
+    for i in range(1, len(array)):
+        if array[i - 1] > array[i]:
+            return False
+    return True
 
 
 class Timer:

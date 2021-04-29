@@ -113,7 +113,7 @@ class InputManager:
     def __update_mouse_state(self):
         self.__mouse_pos = pg.mouse.get_pos()
         if self.__mappings.get(pg.MOUSEBUTTONDOWN) in self.__pressed:
-            if self.__mouse_frames_pressed == 5:
+            if self.__mouse_frames_pressed == 4:
                 action_name = self.__mappings.get(MOUSE_DRAG)
                 if action_name is not None:
                     self.__pressed.add(action_name)
