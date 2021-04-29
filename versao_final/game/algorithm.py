@@ -74,9 +74,11 @@ class Quicksort(Algorithm):
             for j in range(low, high):
                 if array[j] <= high_value:
                     pivot += 1
-                    yield SwapCommand(self.__array, pivot, j)
+                    if pivot != j:
+                        yield SwapCommand(self.__array, pivot, j)
             pivot += 1
-            yield SwapCommand(self.__array, pivot, high)
+            if pivot != high:
+                yield SwapCommand(self.__array, pivot, high)
 
             if pivot - 1 > low:
                 stack.append(low)

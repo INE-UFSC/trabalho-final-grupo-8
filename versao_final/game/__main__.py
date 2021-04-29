@@ -35,7 +35,7 @@ def main():
     enemy_array.numbers = [15, 0, 10, 8, 2, 1, 5, 7]
 
     player = Player(player_array, inputs)
-    enemy_timer = Timer(0.2, auto_start=True, one_shot=False)
+    enemy_timer = Timer(1.0, auto_start=True, one_shot=False)
     enemy = Enemy(
         Quicksort(enemy_array),
         TimedBehaviour(enemy_timer)
