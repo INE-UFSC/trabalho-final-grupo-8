@@ -1,9 +1,9 @@
 """ Módulo para os algoritmos de ordenação """
 
 
-from abc import ABC, abstractmethod
-from game.array import ArrayAdapter
 from typing import List
+from abc import ABC, abstractmethod
+from game.array import Array, SwapCommand
 
 
 class NewAlgorithm(ABC):
@@ -27,8 +27,8 @@ class BubbleSort(NewAlgorithm):
     o maior elemento da sequência.
     """
 
-    def __init__(self, commands: ArrayAdapter):
-        self.__commands = commands
+    def __init__(self, array: Array):
+        self.__array = array
         self.__is_done = False
         self.__next_position = 0
         self.__less = 1
@@ -38,19 +38,19 @@ class BubbleSort(NewAlgorithm):
 
     def one_step(self):
         """ Ordenação de apenas um passo """
-
-        array = self.__commands.numbers
+        array = self.__array.numbers
 
         self.__next_position = 0
         self.__less = 1
         for i in range(self.__next_position, len(array) - 1):
             if array[i] > array[i + 1]:
-                self.__commands.swap(i, i + 1)
+                command = SwapCommand(self.__array, i, i + 1)
                 self.__next_position = i + 1
 
                 if self.__next_position == len(array) - self.__less:
                     self.__next_position = 0
                     self.__less += 1
+                command.execute()
                 break
             if array == sorted(array):
                 self.__is_done = True

@@ -76,18 +76,25 @@ class Array:
 
     def __init__(self, box_factory: BoxFactory, y_pos: int = 0):
         self.__box_factory = box_factory
-        self.__numbers: list[Box] = []
+        self.__boxes: list[Box] = []
+        self.__numbers: list[int] = []
         self.__should_redraw = True
         self.__y_pos = y_pos
 
     @property
-    def numbers(self):
+    def boxes(self):
         """ O array de caixas """
+        return self.__boxes
+
+    @property
+    def numbers(self):
+        """ O array de números """
         return self.__numbers
 
     @numbers.setter
     def numbers(self, array: List[int]):
-        self.__numbers = list(map(self.__box_factory.create, array))
+        self.__numbers = array
+        self.__boxes = list(map(self.__box_factory.create, array))
         self.__should_redraw = True
 
     def __boxes_to_draw(self) -> List[Tuple[pg.Surface, pg.Rect]]:
@@ -97,7 +104,7 @@ class Array:
         """
         boxes: List[Tuple[pg.Surface, pg.Rect]] = []
         dragged = None
-        for box in self.__numbers:
+        for box in self.__boxes:
             if box.dragged:
                 dragged = box
             else:
@@ -108,12 +115,12 @@ class Array:
 
     def __update_positions(self, width: int):
         """ Corrige as posições das caixas conforme a largura e a altura """
-        if len(self.__numbers) == 0:
+        if len(self.__boxes) == 0:
             return
         spacing = (
-            width - (len(self.__numbers) * self.__numbers[0].rect.width)
-        ) // (len(self.__numbers) - 1)
-        for index, box in enumerate(self.__numbers):
+            width - (len(self.__boxes) * self.__boxes[0].rect.width)
+        ) // (len(self.__boxes) - 1)
+        for index, box in enumerate(self.__boxes):
             if not box.dragged:
                 box.rect.x = index * (box.rect.width + spacing)
                 box.rect.y = self.__y_pos
@@ -130,29 +137,25 @@ class Array:
     def swap(self, origin: int, destination: int):
         """ Troca a posição de duas caixas no array """
         self.__should_redraw = True
+        (self.__boxes[origin], self.__boxes[destination]) = (
+            self.__boxes[destination], self.__boxes[origin]
+        )
         (self.__numbers[origin], self.__numbers[destination]) = (
             self.__numbers[destination], self.__numbers[origin]
         )
 
 
-class ArrayAdapter:
-    """ Adapta operações para serem realizadas em dois arrays """
+class SwapCommand:
+    """ Troca duas posições do array """
 
-    def __init__(
-        self,
-        array: List[Box]
-    ):
+    def __init__(self, array: Array, origin: int, destination: int):
         self.__array = array
-        self.__numbers = [box.number for box in self.__array]
+        self.__origin = origin
+        self.__destination = destination
 
-    @property
-    def numbers(self):
-        """ Retorna o array em versão numérica """
-        return self.__numbers
-
-    def swap(self, origin: int, destination: int):
-        """ Troca duas posições de lugar """
-        (self.__array[origin], self.__array[destination]
-         ) = (self.__array[destination], self.__array[origin])
-        (self.__numbers[origin], self.__numbers[destination]
-         ) = (self.__numbers[destination], self.__numbers[origin])
+    def execute(self):
+        """ Executa a operação """
+        for array in [self.__array.boxes, self.__array.numbers]:
+            (array[self.__origin],
+             array[self.__destination]) = (array[self.__destination],
+                                           array[self.__origin])

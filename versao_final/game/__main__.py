@@ -3,7 +3,7 @@
 
 import pygame as pg
 from game.algorithm import BubbleSort
-from game.array import ArrayAdapter, BoxFactory, Array
+from game.array import BoxFactory, Array
 from game.enemy import Enemy, TimedBehaviour
 from game.engine import DisplayManager, InputManager
 from game.player import Player
@@ -31,13 +31,12 @@ def main():
     player_array = Array(BoxFactory(blue_box, font), y_pos=134)
     enemy_array = Array(BoxFactory(red_box, font), y_pos=0)
 
-    player_array.numbers = [0, 10, 8, 2, 1, 5]
-    enemy_array.numbers = [0, 10, 8, 2, 1, 5]
+    player_array.numbers = enemy_array.numbers = [0, 10, 8, 2, 1, 5]
 
     player = Player(player_array, inputs)
     enemy_timer = Timer(1.0, auto_start=True, one_shot=False)
     enemy = Enemy(
-        BubbleSort(ArrayAdapter(enemy_array.numbers)),
+        BubbleSort(enemy_array),
         TimedBehaviour(enemy_timer)
     )
 

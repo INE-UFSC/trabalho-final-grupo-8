@@ -8,21 +8,25 @@ from game.engine import InputManager
 class Player:
     """ Classe responsável pelo controle do player """
 
-    def __init__(self, array: Array, inputs: InputManager):
+    def __init__(
+        self,
+        array: Array,
+        inputs: InputManager
+    ):
         self.__array = array
         self.__inputs = inputs
 
     def __drop_box(self, dragging: Box):
         """ Solta a caixa """
-        for box in self.__array.numbers:
+        for box in self.__array.boxes:
             if (
                 box != dragging and
                 abs(box.rect.centerx - dragging.rect.centerx) < 8 and
                 abs(box.rect.centery - dragging.rect.centery) < 8
             ):
                 self.__array.swap(
-                    self.__array.numbers.index(dragging),
-                    self.__array.numbers.index(box)
+                    self.__array.boxes.index(dragging),
+                    self.__array.boxes.index(box)
                 )
                 break
         dragging.dragged = False
@@ -32,7 +36,7 @@ class Player:
         box_under_cursor = None
         dragging = None
 
-        for box in self.__array.numbers:
+        for box in self.__array.boxes:
             if box.rect.collidepoint(*self.__inputs.mouse_pos):
                 box_under_cursor = box
             if box.dragged:

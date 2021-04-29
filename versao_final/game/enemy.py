@@ -3,7 +3,6 @@
 
 from abc import ABC, abstractmethod
 from game.algorithm import Algorithm
-from game.array import Array
 from game.utils import Timer
 
 
@@ -46,4 +45,3 @@ class Enemy:
             return
         if self.__behaviour.should_update():
             self.__algorithm.one_step()
-            # self.__array.numbers = self.__algorithm.array.copy()
