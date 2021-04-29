@@ -2,7 +2,7 @@
 
 
 from abc import ABC, abstractmethod
-from typing import Iterator, List
+from typing import Generator, Iterator, List
 from game.array import Array
 from game.command import Command, SwapCommand
 from game.utils import is_sorted
@@ -48,8 +48,44 @@ class BubbleSort(Algorithm):
             less += 1
 
 
-class Quicksort(Algorithm):
-    """ Implementação do algoritmo de quicksort utilizando um stack """
+class RecursiveQuicksort(Algorithm):
+    """ Implementação recursiva do algoritmo de quicksort """
+
+    def __init__(self, array: Array):
+        self.__array = array
+        self.__done = False
+
+    def is_done(self) -> bool:
+        return self.__done
+
+    def __partition(self, array: List[int], start: int, end: int) -> Generator[Command, None, int]:
+        pivot_index = start
+        pivot = array[pivot_index]
+
+        while start < end:
+            while start < len(array) and array[start] <= pivot:
+                start += 1
+            while array[end] > pivot:
+                end -= 1
+            if start < end:
+                yield SwapCommand(self.__array, start, end)
+        yield SwapCommand(self.__array, end, pivot_index)
+        return end
+
+    def __sort(self, array: List[int], low: int, high: int) -> Iterator[Command]:
+        if low < high:
+            pivot = yield from self.__partition(array, low, high)
+            yield from self.__sort(array, low, pivot - 1)
+            yield from self.__sort(array, pivot + 1, high)
+
+    def one_step(self) -> Iterator[Command]:
+        array = self.__array.numbers
+        yield from self.__sort(array, 0, len(array) - 1)
+        self.__done = True
+
+
+class IterativeQuicksort(Algorithm):
+    """ Implementação iterativa do quicksort, usando um stack """
 
     def __init__(self, array: Array):
         self.__array = array
