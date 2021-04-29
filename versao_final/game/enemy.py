@@ -2,7 +2,7 @@
 
 
 from abc import ABC, abstractmethod
-from game.algorithm import NewAlgorithm
+from game.algorithm import Algorithm
 from game.utils import Timer
 
 
@@ -33,7 +33,7 @@ class Enemy:
 
     def __init__(
         self,
-        algorithm: NewAlgorithm,
+        algorithm: Algorithm,
         behaviour: Behaviour
     ):
         self.__algorithm = algorithm

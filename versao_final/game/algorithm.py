@@ -2,13 +2,13 @@
 
 
 from abc import ABC, abstractmethod
-from typing import Iterator
+from typing import Iterator, List
 from game.array import Array
 from game.command import Command, SwapCommand
 from game.utils import is_sorted
 
 
-class NewAlgorithm(ABC):
+class Algorithm(ABC):
     """ Base de um algoritmo """
 
     @abstractmethod
@@ -20,7 +20,7 @@ class NewAlgorithm(ABC):
         """ Se o algoritmo já terminou a ordenação """
 
 
-class BubbleSort(NewAlgorithm):
+class BubbleSort(Algorithm):
     """
     Implementação do algoritmo de bubblesort:
 
@@ -48,122 +48,44 @@ class BubbleSort(NewAlgorithm):
             less += 1
 
 
-# class Quicksort(NewAlgorithm):
-#     """ Implementação do algoritmo de quicksort utilizando um stack """
+class Quicksort(Algorithm):
+    """ Implementação do algoritmo de quicksort utilizando um stack """
 
-#     def __init__(self, array: Array):
-#         self.__array = array
-#         self.__high = len(self.__array.numbers) - 1
-#         self.__low = 0
-#         self.__stack = [0] * len(self.__array.numbers)
-#         self.__top = 0
-#         self.__stack[self.__top] = self.__low
-#         self.__top += 1
-#         self.__stack[self.__top] = self.__high
+    def __init__(self, array: Array):
+        self.__array = array
+        self.__done = False
 
-#     def is_done(self):
-#         return self.__top <= 0
+    def is_done(self) -> bool:
+        return self.__done
 
-#     def sort_new(self, array: List[int]):
+    def one_step(self) -> Iterator[Command]:
+        array = self.__array.numbers
 
-#     def __switch_elements(self, i: int, j: int):
-#         self.array[i], self.array[j] = self.array[j], self.array[i]
+        stack: List[int] = []
+        stack.append(0)
+        stack.append(len(array) - 1)
 
-#     def __partition(self):
-#         high_value = self.array[self.__high]
+        while stack:
+            high = stack.pop()
+            low = stack.pop()
 
-#         i = self.__low - 1
-#         for j in range(self.__low, self.__high):
-#             if self.array[j] <= high_value:
-#                 i += 1
-#                 self.__switch_elements(i, j)
-#         i += 1
-#         self.__switch_elements(i, self.__high)
-#         return i
+            pivot = low - 1
+            high_value = array[high]
+            for j in range(low, high):
+                if array[j] <= high_value:
+                    pivot += 1
+                    yield SwapCommand(self.__array, pivot, j)
+            pivot += 1
+            yield SwapCommand(self.__array, pivot, high)
 
-#     def __aux(self):
-#         self.__high = self.__stack[self.__top]
-#         self.__top -= 1
-#         self.__low = self.__stack[self.__top]
-#         self.__top -= 1
+            if pivot - 1 > low:
+                stack.append(low)
+                stack.append(pivot - 1)
 
-#         # Realiza o particionamento, recebendo o pivot
-#         pivot = self.__partition()
-
-#         # Se houverem elementos à esquerda do pivot, adicionamos ao stack
-#         if pivot - 1 > self.__low:
-#             self.__top += 1
-#             self.__stack[self.__top] = self.__low
-#             self.__top += 1
-#             self.__stack[self.__top] = pivot - 1
-
-#         # Se houverem elementos à direita do pivot, adicionamos ao stack
-#         if pivot + 1 < self.__high:
-#             self.__top += 1
-#             self.__stack[self.__top] = pivot + 1
-#             self.__top += 1
-#             self.__stack[self.__top] = self.__high
-
-#     def one_step(self):
-#         if self.__top >= 0:
-#             self.__aux()
-
-
-# class Bubblesort(Algorithm):
-#     """ Implementação do algoritmo de bubblesort:
-#         O algoritmo percorre o array diversas vezes,
-#         e a cada passagem fazer flutuar para o topo
-#         o maior elemento da sequencia."""
-
-#     def __init__(self):
-#         super().__init__()
-#         self.__is_done = False
-#         self.__actual = 0
-#         self.__next_position = 0
-#         self.__less = 1
-
-#     def is_done(self):
-#         return self.__is_done
-
-#     def array(self):
-#         print(self.__array)
-
-#     def sort_new(self, array: list):
-#         self.__array = array
-#         self.__is_done = False
-#         self.__actual = 0
-#         self.__next_position = 0
-#         self.__less = 1
-
-#     def one_step(self):
-#         ''' ordenacao de apenas um passo '''
-
-#         # Reset de variaveis auxiliares:
-#         self.__actual = 0
-#         self.__next_position = 0
-#         self.__less = 1
-#         # Laco principal onde ocorrem as trocas:
-#         for i in range(self.__next_position, len(self.__array) - 1):
-#             if self.__array[i] > self.__array[i + 1]:
-#                 # Faz a troca de posicao.
-#                 self.__array[i], self.__array[i +
-#                                               1] = self.__array[i + 1], self.__array[i]
-#                 # posicao de partida do proximo looping.
-#                 self.__next_position = i + 1
-
-#                 # Caso o valor atinja sua posicao correta no array ordenado:
-#                 if self.__next_position == len(self.__array) - self.__less:
-#                     # A variavel auxiliar de partida sofre reset.
-#                     self.__next_position = 0
-#                     # E a posicao correta do proximo termo e uma anterior a do ultimo termo ordenado.
-#                     self.__less += 1
-#                 break
-
-#             # Caso o proximo valor nao seja menor que o atual:
-#             else:
-#                 # Caso o array esteja ordenado:
-#                 if self.__array == sorted(self.__array):
-#                     self.__is_done = True  # A ordenacao acabou.
+            if pivot + 1 < high:
+                stack.append(pivot + 1)
+                stack.append(high)
+        self.__done = True
 
 
 # class SelectionSort(Algorithm):
