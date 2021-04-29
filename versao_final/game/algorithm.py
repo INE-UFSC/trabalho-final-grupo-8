@@ -2,7 +2,58 @@
 
 
 from abc import ABC, abstractmethod
+from game.array import ArrayAdapter
 from typing import List
+
+
+class NewAlgorithm(ABC):
+    """ Base de um algoritmo """
+
+    @abstractmethod
+    def one_step(self):
+        """ Ordenar apenas um passo """
+
+    @abstractmethod
+    def is_done(self):
+        """ Se o algoritmo já terminou a ordenação """
+
+
+class BubbleSort(NewAlgorithm):
+    """
+    Implementação do algoritmo de bubblesort:
+
+    O algoritmo percorre o array diversas vezes,
+    e a cada passagem fazer flutuar para o topo
+    o maior elemento da sequência.
+    """
+
+    def __init__(self, commands: ArrayAdapter):
+        self.__commands = commands
+        self.__is_done = False
+        self.__next_position = 0
+        self.__less = 1
+
+    def is_done(self):
+        return self.__is_done
+
+    def one_step(self):
+        """ Ordenação de apenas um passo """
+
+        array = self.__commands.numbers
+
+        self.__next_position = 0
+        self.__less = 1
+        for i in range(self.__next_position, len(array) - 1):
+            if array[i] > array[i + 1]:
+                self.__commands.swap(i, i + 1)
+                self.__next_position = i + 1
+
+                if self.__next_position == len(array) - self.__less:
+                    self.__next_position = 0
+                    self.__less += 1
+                break
+            if array == sorted(array):
+                self.__is_done = True
 
 
 class Algorithm(ABC):
@@ -136,13 +187,18 @@ class Bubblesort(Algorithm):
         # Laco principal onde ocorrem as trocas:
         for i in range(self.__next_position, len(self.__array) - 1):
             if self.__array[i] > self.__array[i + 1]:
-                self.__array[i], self.__array[i + 1] = self.__array[i + 1], self.__array[i]  # Faz a troca de posicao.
-                self.__next_position = i + 1  # posicao de partida do proximo looping.
+                # Faz a troca de posicao.
+                self.__array[i], self.__array[i +
+                                              1] = self.__array[i + 1], self.__array[i]
+                # posicao de partida do proximo looping.
+                self.__next_position = i + 1
 
                 # Caso o valor atinja sua posicao correta no array ordenado:
                 if self.__next_position == len(self.__array) - self.__less:
-                    self.__next_position = 0  # A variavel auxiliar de partida sofre reset.
-                    self.__less += 1  # E a posicao correta do proximo termo e uma anterior a do ultimo termo ordenado.
+                    # A variavel auxiliar de partida sofre reset.
+                    self.__next_position = 0
+                    # E a posicao correta do proximo termo e uma anterior a do ultimo termo ordenado.
+                    self.__less += 1
                 break
 
             # Caso o proximo valor nao seja menor que o atual:

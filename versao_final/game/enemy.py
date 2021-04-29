@@ -34,14 +34,11 @@ class Enemy:
 
     def __init__(
         self,
-        array: Array,
         algorithm: Algorithm,
         behaviour: Behaviour
     ):
         self.__algorithm = algorithm
-        self.__array = array
         self.__behaviour = behaviour
-        self.__algorithm.sort_new([box.number for box in self.__array.numbers])
 
     def update(self):
         """ Atualiza o timer e checa se o array deve ser organizado """
@@ -49,4 +46,4 @@ class Enemy:
             return
         if self.__behaviour.should_update():
             self.__algorithm.one_step()
-            self.__array.numbers = self.__algorithm.array.copy()
+            # self.__array.numbers = self.__algorithm.array.copy()

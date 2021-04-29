@@ -133,3 +133,26 @@ class Array:
         (self.__numbers[origin], self.__numbers[destination]) = (
             self.__numbers[destination], self.__numbers[origin]
         )
+
+
+class ArrayAdapter:
+    """ Adapta operações para serem realizadas em dois arrays """
+
+    def __init__(
+        self,
+        array: List[Box]
+    ):
+        self.__array = array
+        self.__numbers = [box.number for box in self.__array]
+
+    @property
+    def numbers(self):
+        """ Retorna o array em versão numérica """
+        return self.__numbers
+
+    def swap(self, origin: int, destination: int):
+        """ Troca duas posições de lugar """
+        (self.__array[origin], self.__array[destination]
+         ) = (self.__array[destination], self.__array[origin])
+        (self.__numbers[origin], self.__numbers[destination]
+         ) = (self.__numbers[destination], self.__numbers[origin])

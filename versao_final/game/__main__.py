@@ -2,8 +2,8 @@
 
 
 import pygame as pg
-from game.algorithm import Quicksort
-from game.array import BoxFactory, Array
+from game.algorithm import BubbleSort
+from game.array import ArrayAdapter, BoxFactory, Array
 from game.enemy import Enemy, TimedBehaviour
 from game.engine import DisplayManager, InputManager
 from game.player import Player
@@ -36,7 +36,10 @@ def main():
 
     player = Player(player_array, inputs)
     enemy_timer = Timer(1.0, auto_start=True, one_shot=False)
-    enemy = Enemy(enemy_array, Quicksort(), TimedBehaviour(enemy_timer))
+    enemy = Enemy(
+        BubbleSort(ArrayAdapter(enemy_array.numbers)),
+        TimedBehaviour(enemy_timer)
+    )
 
     while True:
         inputs.update([gui.handle_event])
