@@ -4,7 +4,7 @@
 from abc import ABC, abstractmethod
 from typing import Generator, Iterator, List
 from game.array import Array
-from game.command import Command, SwapCommand, SwapCommandFactory
+from game.command import Command, SwapCommandFactory
 from game.utils import is_sorted
 
 
@@ -29,7 +29,8 @@ class BubbleSort(Algorithm):
     o maior elemento da sequência.
     """
 
-    def __init__(self, array: Array):
+    def __init__(self, swap_factory: SwapCommandFactory, array: Array):
+        self.__swap_factory = swap_factory
         self.__array = array
         self.__done = False
 
@@ -43,7 +44,7 @@ class BubbleSort(Algorithm):
         while not self.__done:
             for i in range(len(array) - less):
                 if array[i] > array[i + 1]:
-                    yield SwapCommand(self.__array, i, i + 1)
+                    yield self.__swap_factory.create(i, i + 1)
             self.__done = is_sorted(array)
             less += 1
 

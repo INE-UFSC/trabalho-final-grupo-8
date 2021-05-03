@@ -1,11 +1,11 @@
 """ Módulo de entrada do projeto """
 
 
-from game.command import SwapCommandFactory
 import pygame as pg
-from game.algorithm import HoarePartitionScheme, RecursiveQuicksort, HoarePartitionScheme
+from game.algorithm import RecursiveQuicksort, HoarePartitionScheme
 from game.array import BoxFactory, Array
-from game.enemy import Enemy, TimedBehaviour
+from game.command import SwapCommandFactory
+from game.enemy import Enemy, EnemyBuilder, TimedBehaviour
 from game.engine import DisplayManager, InputManager
 from game.player import Player
 # from game.ui import UI
@@ -29,23 +29,32 @@ def main():
     red_box = pg.image.load('./assets/RedBox.png').convert_alpha()
     font = pg.font.Font('./assets/OpenSansPXBold.ttf', 16)
 
-    player_array = Array(BoxFactory(blue_box, font), y_pos=134)
+    enemy_builder = EnemyBuilder()
     enemy_array = Array(BoxFactory(red_box, font), y_pos=0)
+    enemy_timer = Timer(1.0, auto_start=True, one_shot=False)
+
+    enemy_builder.set_algorithm(RecursiveQuicksort(
+        HoarePartitionScheme(SwapCommandFactory(enemy_array)), enemy_array)
+    )
+    enemy_builder.set_behaviour(TimedBehaviour(enemy_timer))
+
+    enemy = enemy_builder.get_result()
+
+    player_array = Array(BoxFactory(blue_box, font), y_pos=134)
 
     player_array.numbers = [15, 0, 10, 8, 2, 1, 5, 7]
     enemy_array.numbers = [15, 0, 10, 8, 2, 1, 5, 7]
 
     player = Player(player_array, inputs)
-    enemy_timer = Timer(1.0, auto_start=True, one_shot=False)
-    enemy = Enemy(
-        RecursiveQuicksort(
-            HoarePartitionScheme(
-                SwapCommandFactory(enemy_array)
-            ),
-            enemy_array
-        ),
-        TimedBehaviour(enemy_timer)
-    )
+    # enemy = Enemy(
+    #     RecursiveQuicksort(
+    #         HoarePartitionScheme(
+    #             SwapCommandFactory(enemy_array)
+    #         ),
+    #         enemy_array
+    #     ),
+    #     TimedBehaviour(enemy_timer)
+    # )
 
     while True:
         # inputs.update([gui.handle_event])

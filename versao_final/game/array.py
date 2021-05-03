@@ -88,13 +88,13 @@ class Array:
 
     @property
     def numbers(self):
-        """ O array de números """
+        """ O array numérico """
         return self.__numbers
 
-    @numbers.setter
-    def numbers(self, array: List[int]):
-        self.__numbers = array
-        self.__boxes = list(map(self.__box_factory.create, array))
+    def set_values(self, numbers: List[int]) -> None:
+        """ Associa uma lista à esse array """
+        self.__numbers = numbers
+        self.__boxes = list(map(self.__box_factory.create, numbers))
         self.__should_redraw = True
 
     def __boxes_to_draw(self) -> List[Tuple[pg.Surface, pg.Rect]]:
