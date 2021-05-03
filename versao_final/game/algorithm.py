@@ -161,6 +161,36 @@ class IterativeQuicksort(Algorithm):
         self.__done = True
 
 
+class InsertionSort(Algorithm):
+    """ Implementação do algoritmo de InsertionSort """
+
+    def __init__(self, array):
+        self.__array = array
+        self.is_done = False
+        self.__curent_pos = 1
+
+    def is_done(self):
+        return self.__is_done
+
+    def sort_new(self, array: list):
+        self.__array = array
+        self.is_done = False
+        self.__curent_pos = 1
+
+    def one_step(self):
+        """ Verificará se os elementos anteriores são maiores ou menores que o atual para ordenar """
+        if self.__array[self.__curent_pos] < self.__array[self.__curent_pos - 1]:
+            for n in range(0, self.__curent_pos):
+                if self.__array[n] > self.__array[self.__curent_pos]:
+                    self.__array.insert(n, self.__array[self.__curent_pos])
+                    self.__array.pop(self.__curent_pos + 1)
+                    print(self.__array)
+                    break
+        self.__curent_pos += 1
+        if self.__curent_pos == len(self.__array):
+            self.is_one = True
+
+
 # class SelectionSort(Algorithm):
 #     """
 #     Implementação do algoritmo de Selectionsort:
