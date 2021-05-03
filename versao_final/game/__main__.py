@@ -2,10 +2,9 @@
 
 
 import pygame as pg
-from game.algorithm import RecursiveQuicksort, HoarePartitionScheme
+from game.algorithm import SelectionSort
 from game.array import BoxFactory, Array
-from game.command import SwapCommandFactory
-from game.enemy import Enemy, EnemyBuilder, TimedBehaviour
+from game.enemy import EnemyBuilder, TimedBehaviour
 from game.engine import DisplayManager, InputManager
 from game.player import Player
 # from game.ui import UI
@@ -33,9 +32,7 @@ def main():
     enemy_array = Array(BoxFactory(red_box, font), y_pos=0)
     enemy_timer = Timer(1.0, auto_start=True, one_shot=False)
 
-    enemy_builder.set_algorithm(RecursiveQuicksort(
-        HoarePartitionScheme(SwapCommandFactory(enemy_array)), enemy_array)
-    )
+    enemy_builder.set_algorithm(SelectionSort(enemy_array))
     enemy_builder.set_behaviour(TimedBehaviour(enemy_timer))
 
     enemy = enemy_builder.get_result()

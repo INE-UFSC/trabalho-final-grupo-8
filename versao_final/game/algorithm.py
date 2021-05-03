@@ -4,7 +4,7 @@
 from abc import ABC, abstractmethod
 from typing import Generator, Iterator, List
 from game.array import Array
-from game.command import Command, SwapCommandFactory
+from game.command import Command, SetCommand, SwapCommand, SwapCommandFactory
 from game.utils import is_sorted
 
 
@@ -164,90 +164,57 @@ class IterativeQuicksort(Algorithm):
 class InsertionSort(Algorithm):
     """ Implementação do algoritmo de InsertionSort """
 
-    def __init__(self, array):
+    def __init__(
+        self,
+        array: Array
+    ):
         self.__array = array
-        self.is_done = False
-        self.__curent_pos = 1
+        self.__done = False
+
+    def is_done(self) -> bool:
+        return self.__done
+
+    def one_step(self) -> Iterator[Command]:
+        """
+        Verificará se os elementos anteriores são
+        maiores ou menores que o atual para ordenar
+        """
+        array = self.__array.numbers
+        for i in range(1, len(array)):
+            key = array[i]
+            j = i - 1
+            while j >= 0 and key < array[j]:
+                SetCommand(self.__array, j + 1, array[j]).execute()
+                j -= 1
+            yield SetCommand(self.__array, j + 1, key)
+        self.__done = True
+
+
+class SelectionSort(Algorithm):
+    """
+    Implementação do algoritmo de Selectionsort:
+    A ordenacao e feita de forma que o algoritmo
+    procura o menor valor do array e o posiciona
+    na primeira posicao, trocando-o de lugar com
+    o valor que ocupava tal posicao, entao a
+    busca pelo segundo menor comeca e ao fim
+    posiciona o segundo menor valor na segunda
+    posicao e assim por diante.
+    """
+
+    def __init__(self, array: Array):
+        self.__array = array
+        self.__done = False
 
     def is_done(self):
-        return self.__is_done
-
-    def sort_new(self, array: list):
-        self.__array = array
-        self.is_done = False
-        self.__curent_pos = 1
+        return self.__done
 
     def one_step(self):
-        """ Verificará se os elementos anteriores são maiores ou menores que o atual para ordenar """
-        if self.__array[self.__curent_pos] < self.__array[self.__curent_pos - 1]:
-            for n in range(0, self.__curent_pos):
-                if self.__array[n] > self.__array[self.__curent_pos]:
-                    self.__array.insert(n, self.__array[self.__curent_pos])
-                    self.__array.pop(self.__curent_pos + 1)
-                    print(self.__array)
-                    break
-        self.__curent_pos += 1
-        if self.__curent_pos == len(self.__array):
-            self.is_one = True
-
-
-# class SelectionSort(Algorithm):
-#     """
-#     Implementação do algoritmo de Selectionsort:
-#     A ordenacao e feita de forma que o algoritmo
-#     procura o menor valor do array e o posiciona
-#     na primeira posicao, trocando-o de lugar com
-#     o valor que ocupava tal posicao, entao a
-#     busca pelo segundo menor comeca e ao fim
-#     posiciona o segundo menor valor na segunda
-#     posicao e assim por diante.
-#     """
-
-#     def __init__(self):
-#         super().__init__()
-#         self.__is_done = False
-#         self.__actual_less = -1
-#         self.__initial = 0
-#         self.__higher = 0
-#         self.__higher_true_position = 0
-
-#     def is_done(self):
-#         return self.__is_done
-
-#     def sort_new(self, array: list):
-#         self.array = array
-#         self.__is_done = False
-#         self.__actual_less = self.array[0]
-#         self.__initial = 0
-#         self.__higher = 0
-#         self.__higher_true_position = 0
-
-#     def one_step(self):
-#         """ ordenacao de apenas um passo """
-
-#         # Busca pelo menor valor partindo da posicao self.__initial:
-#         for i in range(self.__initial, len(self.array)):
-#             # Caso o menor valor encontrado no array ate o momento seja maior que algum proximo:
-#             if self.__actual_less > self.array[i]:
-#                 # A variavel auxiliar armazena o maior valor.
-#                 self.__higher = self.array[self.__initial]
-#                 # A variavel auxiliar armazena a posicao real do maior valor.
-#                 self.__higher_true_position = i
-#                 # A variavel auxiliar armazena o menor valor.
-#                 self.__actual_less = self.array[i]
-
-#         # E feita a troca de posicoes entre o menor e maior valores encontrados:
-#         self.array[self.__initial], self.array[self.__higher_true_position] = self.__actual_less, self.__higher
-
-#         # Como o menor valor ja esta em sua posicao, a proxima busca parte de uma casa adiante:
-#         self.__initial += 1
-
-#         # Caso self.__initial seja igual ao comprimento da lista, o array ja esta ordenado:
-#         if self.__initial == len(self.array):
-#             self.__is_done = True
-
-#         if self.__is_done is False:
-#             # A variavel auxiliar responsavel por armazenar o menor valor
-#             # encontrado ate o momento recebe o valor da
-#             # primeira posicao da proxima busca:
-#             self.__actual_less = self.array[self.__initial]
+        array = self.__array.numbers
+        for i in range(len(array)):
+            minimum_index = i
+            for j in range(i + 1, len(array)):
+                if array[minimum_index] > array[j]:
+                    minimum_index = j
+            yield SwapCommand(self.__array, minimum_index, i)
+        self.__done = True
