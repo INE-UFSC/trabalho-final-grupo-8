@@ -2,7 +2,7 @@
 
 
 from abc import ABC, abstractmethod
-from typing import Generator, Iterator, List
+from typing import Callable, Generator, Iterator, List, Tuple
 from game.array import Array
 from game.command import Command, SetCommand, SwapCommand, SwapCommandFactory
 from game.utils import is_sorted
@@ -49,65 +49,19 @@ class BubbleSort(Algorithm):
             less += 1
 
 
-class PartitionScheme(ABC):
-    """ Método de partição para o algoritmo de quicksort """
-
-    @abstractmethod
-    def partition(self, array: List[int], low: int, high: int) -> Generator[Command, None, int]:
-        """
-        Realiza a partição, utilizando yield nas trocas
-        de posição e retornando o valor do pivor quando
-        finalizado
-        """
-
-
-class LomutoPartitionScheme(PartitionScheme):
-    """ Método de partição de Nico Lomuto """
-
-    def __init__(self, swap_factory: SwapCommandFactory):
-        self.__swap_factory = swap_factory
-
-    def partition(self, array: List[int], low: int, high: int) -> Generator[Command, None, int]:
-        """ Utiliza apenas um for loop ao realizar o particionamento """
-        pivot = low - 1
-        high_value = array[high]
-        for j in range(low, high):
-            if array[j] <= high_value:
-                pivot += 1
-                if pivot != j:
-                    yield self.__swap_factory.create(pivot, j)
-        pivot += 1
-        if pivot != high:
-            yield self.__swap_factory.create(pivot, high)
-        return pivot
-
-
-class HoarePartitionScheme(PartitionScheme):
-    """ Método de partição de Tony Hoare """
-
-    def __init__(self, swap_factory: SwapCommandFactory):
-        self.__swap_factory = swap_factory
-
-    def partition(self, array: List[int], low: int, high: int) -> Generator[Command, None, int]:
-        """ Utiliza while loops durante o particionamento """
-        pivot_index = low
-        pivot = array[pivot_index]
-
-        while low < high:
-            while low < len(array) and array[low] <= pivot:
-                low += 1
-            while array[high] > pivot:
-                high -= 1
-            if low < high:
-                yield self.__swap_factory.create(low, high)
-        yield self.__swap_factory.create(high, pivot_index)
-        return high
+# Partitioner é uma função que:
+#   - Recebe uma lista e dois inteiro
+#   - Retorna um generator
+Partitioner = Callable[
+    [List[int], int, int],
+    Generator[Tuple[int, int], None, int]
+]
 
 
 class RecursiveQuicksort(Algorithm):
     """ Implementação recursiva do algoritmo de quicksort """
 
-    def __init__(self, partitioner: PartitionScheme, array: Array):
+    def __init__(self, partitioner: Partitioner, array: Array):
         self.__partitioner = partitioner
         self.__array = array
         self.__done = False
@@ -117,7 +71,13 @@ class RecursiveQuicksort(Algorithm):
 
     def __sort(self, array: List[int], low: int, high: int) -> Iterator[Command]:
         if low < high:
-            pivot = yield from self.__partitioner.partition(array, low, high)
+            try:
+                partitions = self.__partitioner(array, low, high)
+                while True:
+                    i, j = next(partitions)
+                    yield SwapCommand(self.__array, i, j)
+            except StopIteration as generator_done:
+                pivot = generator_done.value
             yield from self.__sort(array, low, pivot - 1)
             yield from self.__sort(array, pivot + 1, high)
 
@@ -130,7 +90,7 @@ class RecursiveQuicksort(Algorithm):
 class IterativeQuicksort(Algorithm):
     """ Implementação iterativa do quicksort, usando um stack """
 
-    def __init__(self, partitioner: PartitionScheme, array: Array):
+    def __init__(self, partitioner: Partitioner, array: Array):
         self.__partitioner = partitioner
         self.__array = array
         self.__done = False
@@ -149,7 +109,13 @@ class IterativeQuicksort(Algorithm):
             high = stack.pop()
             low = stack.pop()
 
-            pivot = yield from self.__partitioner.partition(array, low, high)
+            try:
+                partitions = self.__partitioner(array, low, high)
+                while True:
+                    i, j = next(partitions)
+                    yield SwapCommand(self.__array, i, j)
+            except StopIteration as generator_done:
+                pivot = generator_done.value
 
             if pivot - 1 > low:
                 stack.append(low)
@@ -218,3 +184,41 @@ class SelectionSort(Algorithm):
                     minimum_index = j
             yield SwapCommand(self.__array, minimum_index, i)
         self.__done = True
+
+
+def lomuto_partitioner(
+    array: List[int],
+    low: int,
+    high: int
+) -> Generator[Tuple[int, int], None, int]:
+    """ Método de partição de Nico Lomuto, com apenas um for loop """
+    pivot = low - 1
+    high_value = array[high]
+    for j in range(low, high):
+        if array[j] <= high_value:
+            pivot += 1
+            if pivot != j:
+                yield (pivot, j)
+    pivot += 1
+    if pivot != high:
+        yield (pivot, high)
+    return pivot
+
+
+def hoare_partitioner(
+    array: List[int],
+    low: int,
+    high: int
+) -> Generator[Tuple[int, int], None, int]:
+    """ Método de partição de Tony Hoare, com while loops """
+    pivot_index = low
+    pivot = array[pivot_index]
+    while low < high:
+        while low < len(array) and array[low] <= pivot:
+            low += 1
+        while array[high] > pivot:
+            high -= 1
+        if low < high:
+            yield (low, high)
+    yield (high, pivot_index)
+    return high
