@@ -19,13 +19,15 @@ def main():
     """ Função principal do projeto """
 
     display = DisplayManager("Sort it!", SCREEN_SIZE)
-    audio = SoundManager('./assets')
-    audio.load_sound('move', 'move1.wav')
     inputs = InputManager({
         'interact': 'space',
         'click': 'mouse_click',
         'drag': 'mouse_drag'
     })
+
+    audio = SoundManager('./assets')
+    audio.load_sound('move', 'move1.wav')
+    audio.load_sound('finished', 'finished.wav')
 
     surface = pg.Surface(SCREEN_SIZE)
     gui = UI(SCREEN_SIZE)

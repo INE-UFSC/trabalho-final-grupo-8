@@ -8,7 +8,7 @@ from game.utils import Singleton
 class SoundManager(metaclass=Singleton):
     """ Classe singleton que lida com os sons """
 
-    def __init__(self, path: str):
+    def __init__(self, path: str = './'):
         self.__path = path
         self.__sounds: Dict[str, pg.mixer.Sound] = {}
         pg.mixer.init()
@@ -17,6 +17,6 @@ class SoundManager(metaclass=Singleton):
         """ Carrega um novo som """
         self.__sounds[key] = pg.mixer.Sound(f"{self.__path}/{file_name}")
 
-    def get_sound(self, key: str) -> pg.mixer.Sound:
+    def play(self, key: str) -> None:
         """ Retorna o objeto de som """
-        return self.__sounds[key]
+        self.__sounds[key].play()

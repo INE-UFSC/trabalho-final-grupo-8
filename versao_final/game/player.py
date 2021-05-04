@@ -29,8 +29,7 @@ class Player:
                     self.__array.boxes.index(dragging),
                     self.__array.boxes.index(box)
                 )
-                sound_manager = SoundManager('./assets')
-                sound_manager.get_sound('move').play()
+                SoundManager().play('move')
                 break
         dragging.dragged = False
 

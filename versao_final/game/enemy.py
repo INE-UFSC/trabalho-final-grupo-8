@@ -2,6 +2,7 @@
 
 
 from abc import ABC, abstractmethod
+from game.sound import SoundManager
 from typing import Optional
 from game.algorithm import Algorithm
 from game.utils import Timer
@@ -49,7 +50,7 @@ class Enemy:
             try:
                 next(self.__step_by_step).execute()
             except StopIteration:  # Ordenação finalizou...
-                pass
+                SoundManager().play('finished')
 
 
 class AttributesNotSetException(Exception):
