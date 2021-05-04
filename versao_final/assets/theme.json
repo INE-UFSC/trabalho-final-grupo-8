@@ -117,12 +117,7 @@
   },
 
   "menu_background": {
-    "prototype": "panel",
-    "images": {
-      "background_image": {
-        "path": "assets/MenuBackground.png"
-      }
-    }
+    "prototype": "panel"
   },
 
   "drop_down_menu": {

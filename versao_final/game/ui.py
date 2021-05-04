@@ -62,21 +62,21 @@ class MainMenu(UIScene):
     def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
         super().__init__(manager, size, "menu_background")
         pygame_gui.elements.UILabel(
-            pg.Rect(0, 10, size[0], 48),
+            pg.Rect(0, 40, size[0], 48),
             "Sort it!",
             manager,
             container=self.container,
             object_id="title"
         )
         self.__play_button = pygame_gui.elements.UIButton(
-            pg.Rect(10, 100, (size[0] // 2) - 15, 40),
+            pg.Rect(size[0] // 2 - 80, size[1] - 140, 160, 40),
             "Jogar",
             manager,
             container=self.container,
             object_id="green_button"
         )
         self.__exit_button = pygame_gui.elements.UIButton(
-            pg.Rect(size[0] // 2 + 5, 100, (size[0] // 2) - 15, 40),
+            pg.Rect(size[0] // 2 - 80, size[1] - 80, 160, 40),
             "Sair",
             manager,
             container=self.container,
@@ -140,14 +140,14 @@ class SetupMenu(UIScene):
         )
 
         self.__play_button = pygame_gui.elements.UIButton(
-            pg.Rect(10, 100, (size[0] // 2) - 15, 40),
+            pg.Rect(20, size[1] - 60, (size[0] // 2) - 25, 40),
             "Jogar",
             manager,
             container=self.container,
             object_id="green_button"
         )
         self.__back_button = pygame_gui.elements.UIButton(
-            pg.Rect(size[0] // 2 + 5, 100, (size[0] // 2) - 15, 40),
+            pg.Rect(size[0] // 2 + 10, size[1] - 60, (size[0] // 2) - 25, 40),
             "Voltar",
             manager,
             container=self.container,
