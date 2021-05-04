@@ -7,7 +7,7 @@ from game.array import BoxFactory, Array
 from game.enemy import EnemyBuilder, TimedBehaviour
 from game.engine import DisplayManager, InputManager
 from game.player import Player
-# from game.ui import UI
+from game.ui import UI
 from game.utils import Timer
 
 
@@ -22,7 +22,7 @@ def main():
     })
 
     surface = pg.Surface((200, 150))
-    # gui = UI((200, 150))
+    gui = UI((200, 150))
 
     blue_box = pg.image.load('./assets/BlueBox.png').convert_alpha()
     red_box = pg.image.load('./assets/RedBox.png').convert_alpha()
@@ -30,7 +30,7 @@ def main():
 
     enemy_builder = EnemyBuilder()
     enemy_array = Array(BoxFactory(red_box, font), y_pos=0)
-    enemy_timer = Timer(1.0, auto_start=True, one_shot=False)
+    enemy_timer = Timer(2.0, auto_start=True, one_shot=False)
     enemy_builder.set_behaviour(TimedBehaviour(enemy_timer))
     enemy_builder.set_algorithm(
         RecursiveQuicksort(lomuto_partitioner, enemy_array)
@@ -46,21 +46,20 @@ def main():
     player = Player(player_array, inputs)
 
     while True:
-        # inputs.update([gui.handle_event])
-        inputs.update([])
+        inputs.update([gui.handle_event])
         delta_time = display.tick()
         enemy_timer.update(delta_time)
         surface.fill((50, 50, 50))
 
-        # gui.update(delta_time)
+        gui.update(delta_time)
 
-        # if gui.in_game():
-        player.update()
-        enemy.update()
-        player_array.draw(surface)
-        enemy_array.draw(surface)
+        if gui.in_game():
+            player.update()
+            enemy.update()
+            player_array.draw(surface)
+            enemy_array.draw(surface)
 
-        # gui.draw(surface)
+        gui.draw(surface)
         display.draw(surface)
 
 
