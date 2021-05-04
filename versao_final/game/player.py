@@ -3,7 +3,7 @@
 
 from game.array import Array, Box
 from game.engine import InputManager
-from game.sound_handler import SoundHandler
+from game.sound import SoundManager
 
 
 class Player:
@@ -29,8 +29,8 @@ class Player:
                     self.__array.boxes.index(dragging),
                     self.__array.boxes.index(box)
                 )
-                sh = SoundHandler()
-                sh.move_sfx()
+                sound_manager = SoundManager('./assets')
+                sound_manager.get_sound('move').play()
                 break
         dragging.dragged = False
 

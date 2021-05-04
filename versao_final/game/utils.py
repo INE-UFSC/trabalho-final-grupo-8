@@ -2,7 +2,7 @@
 
 
 import sys
-from typing import List
+from typing import Dict, List
 import pygame as pg
 
 
@@ -20,6 +20,19 @@ def is_sorted(array: List[float]):
         if array[i - 1] > array[i]:
             return False
     return True
+
+
+class Singleton(type):
+    """ Metaclasse referente a um singleton """
+
+    __instances: Dict[type, object] = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls.__instances:
+            cls.__instances[cls] = super(
+                Singleton, cls
+            ).__call__(*args, **kwargs)
+        return cls.__instances[cls]
 
 
 class Timer:

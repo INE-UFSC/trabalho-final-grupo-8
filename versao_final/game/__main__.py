@@ -7,6 +7,7 @@ from game.array import BoxFactory, Array
 from game.enemy import EnemyBuilder, TimedBehaviour
 from game.engine import DisplayManager, InputManager
 from game.player import Player
+from game.sound import SoundManager
 from game.ui import UI
 from game.utils import Timer
 
@@ -15,6 +16,8 @@ def main():
     """ Função principal do projeto """
 
     display = DisplayManager("Sort it!", (200, 150))
+    audio = SoundManager('./assets')
+    audio.load_sound('move', 'move1.wav')
     inputs = InputManager({
         'interact': 'space',
         'click': 'mouse_click',
