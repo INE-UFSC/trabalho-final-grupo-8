@@ -32,12 +32,17 @@ def main():
     surface = pg.Surface(SCREEN_SIZE)
     gui = UI(SCREEN_SIZE)
 
-    blue_box = pg.image.load('./assets/BlueBox.png').convert_alpha()
-    red_box = pg.image.load('./assets/RedBox.png').convert_alpha()
+    box_outline = pg.image.load('./assets/BoxOutline.png').convert_alpha()
     font = pg.font.Font('./assets/OpenSansPXBold.ttf', 16)
 
-    enemy_array = Array(BoxFactory(red_box, font), y_pos=0)
-    player_array = Array(BoxFactory(blue_box, font), y_pos=(SCREEN_SIZE[1]-16))
+    enemy_array = Array(
+        BoxFactory(box_outline, (255, 0, 77), font),
+        y_pos=0
+    )
+    player_array = Array(
+        BoxFactory(box_outline, (41, 173, 255), font),
+        y_pos=(SCREEN_SIZE[1]-16)
+    )
 
     enemy_builder = EnemyBuilder()
     enemy_timer = Timer(1.0, auto_start=True, one_shot=False)
