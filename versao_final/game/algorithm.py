@@ -19,15 +19,13 @@ class Algorithm(ABC):
     def is_done(self) -> bool:
         """ Se o algoritmo já terminou a ordenação """
 
+    @abstractmethod
+    def description(self) -> str:
+        """ Retorna a descrição do algoritmo de ordenação"""
+
 
 class BubbleSort(Algorithm):
-    """
-    Implementação do algoritmo de bubblesort:
-
-    O algoritmo percorre o array diversas vezes,
-    e a cada passagem fazer flutuar para o topo
-    o maior elemento da sequência.
-    """
+    """ Implementação do algoritmo de bubblesort: """
 
     def __init__(self, array: Array):
         self.__array = array
@@ -35,6 +33,11 @@ class BubbleSort(Algorithm):
 
     def is_done(self) -> bool:
         return self.__done
+
+    def description(self) -> str:
+        return ("O algoritmo percorre o array diversas vezes, "
+                "e a cada passagem fazer flutuar para o topo o "
+                "maior elemento da sequência.")
 
     def one_step(self) -> Iterator[Command]:
         array = self.__array.numbers
@@ -68,6 +71,9 @@ class RecursiveQuicksort(Algorithm):
     def is_done(self) -> bool:
         return self.__done
 
+    def description(self) -> str:
+        return ("bla")
+
     def __sort(self, array: List[int], low: int, high: int) -> Iterator[Command]:
         if low < high:
             try:
@@ -96,6 +102,9 @@ class IterativeQuicksort(Algorithm):
 
     def is_done(self) -> bool:
         return self.__done
+
+    def description(self) -> str:
+        return ("bla")
 
     def one_step(self) -> Iterator[Command]:
         array = self.__array.numbers
@@ -139,6 +148,9 @@ class InsertionSort(Algorithm):
     def is_done(self) -> bool:
         return self.__done
 
+    def description(self) -> str:
+        return ("bla")
+
     def one_step(self) -> Iterator[Command]:
         """
         Verificará se os elementos anteriores são
@@ -156,16 +168,7 @@ class InsertionSort(Algorithm):
 
 
 class SelectionSort(Algorithm):
-    """
-    Implementação do algoritmo de Selectionsort:
-    A ordenacao e feita de forma que o algoritmo
-    procura o menor valor do array e o posiciona
-    na primeira posicao, trocando-o de lugar com
-    o valor que ocupava tal posicao, entao a
-    busca pelo segundo menor comeca e ao fim
-    posiciona o segundo menor valor na segunda
-    posicao e assim por diante.
-    """
+    """Implementação do algoritmo de Selectionsort:"""
 
     def __init__(self, array: Array):
         self.__array = array
@@ -173,6 +176,12 @@ class SelectionSort(Algorithm):
 
     def is_done(self):
         return self.__done
+
+    def description(self) -> str:
+        return ("A ordenação é feita de forma que o algoritmo procura"
+                " o menor valor do array e o posiciona na primeira posição, "
+                "trocando-o de lugar com o valor que ocupava tal posicao,"
+                "o processo termina quando todos os valores estiverem ordenados.")
 
     def one_step(self):
         array = self.__array.numbers
