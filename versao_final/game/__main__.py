@@ -61,9 +61,8 @@ def main():
     while True:
         inputs.update([gui.handle_event])
         delta_time = display.tick()
-        enemy_timer.update(delta_time)
-        surface.fill((50, 50, 50))
 
+        enemy_timer.update(delta_time)
         gui.update(delta_time)
 
         if gui.in_game():
@@ -72,6 +71,7 @@ def main():
             player_array.draw(surface)
             enemy_array.draw(surface)
 
+        surface.fill((50, 50, 50))
         gui.draw(surface)
         display.draw(surface)
 

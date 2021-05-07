@@ -105,11 +105,12 @@ class SetupMenu(UIScene):
             manager,
             container=self.container
         )
-        pygame_gui.elements.UITextEntryLine(
+        self.__name = pygame_gui.elements.UITextEntryLine(
             pg.Rect(50, 10, size[0] - 60, 20),
             manager,
             container=self.container
-        ).set_text("John Doe")
+        )
+        self.__name.set_text("John Doe")
 
         pygame_gui.elements.UILabel(
             pg.Rect(10, 40, 40, 20),
@@ -117,7 +118,7 @@ class SetupMenu(UIScene):
             manager,
             container=self.container
         )
-        pygame_gui.elements.UIDropDownMenu(
+        self.__mode = pygame_gui.elements.UIDropDownMenu(
             ["Movimentos", "Tempo"],
             "Movimentos",
             pg.Rect(50, 40, size[0]-60, 20),
@@ -131,7 +132,7 @@ class SetupMenu(UIScene):
             manager,
             container=self.container
         )
-        pygame_gui.elements.UIDropDownMenu(
+        self.__algorithm = pygame_gui.elements.UIDropDownMenu(
             ["Quick Sort", "Bubble Sort"],
             "Quick Sort",
             pg.Rect(80, 70, size[0]-90, 20),
@@ -158,6 +159,10 @@ class SetupMenu(UIScene):
         if event.type == pg.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.__play_button:
+                    # game_state = GameState()
+                    # name = self.__name.get_text()
+                    # mode = self.__mode.current_state.selected_option
+                    # algorithm = self.__algorithm.current_state.selected_option
                     return UIState.IN_GAME
                 if event.ui_element == self.__back_button:
                     return UIState.MAIN_MENU
