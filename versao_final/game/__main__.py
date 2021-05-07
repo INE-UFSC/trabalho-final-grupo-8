@@ -64,6 +64,7 @@ def main():
 
         enemy_timer.update(delta_time)
         gui.update(delta_time)
+        surface.fill((50, 50, 50))
 
         if gui.in_game():
             player.update()
@@ -71,7 +72,6 @@ def main():
             player_array.draw(surface)
             enemy_array.draw(surface)
 
-        surface.fill((50, 50, 50))
         gui.draw(surface)
         display.draw(surface)
 
