@@ -4,6 +4,7 @@
 from abc import ABC, abstractmethod
 from enum import IntEnum
 from typing import Dict, Tuple
+from game.game import GameState
 import pygame as pg
 import pygame_gui
 from game.utils import end
@@ -110,7 +111,7 @@ class SetupMenu(UIScene):
             manager,
             container=self.container
         )
-        self.__name.set_text("John Doe")
+        self.__name.set_text(GameState().player_data.name)
 
         pygame_gui.elements.UILabel(
             pg.Rect(10, 40, 40, 20),
@@ -178,15 +179,15 @@ class InGameMenu(UIScene):
         font = manager.get_theme().get_font_dictionary().find_font(16, "MatchupPro")
 
         pygame_gui.elements.UILabel(
-            pg.Rect(0, size[1] // 2 - 32, *font.size("John Doe")),
-            "John Doe",
+            pg.Rect(0, size[1] // 2 - 32, *font.size(GameState().player_data.name)),
+            GameState().player_data.name,
             manager,
             container=self.container,
             object_id="blue_label"
         )
         pygame_gui.elements.UILabel(
-            pg.Rect(0, size[1] // 2 - 16, *font.size("1642")),
-            "1642",
+            pg.Rect(0, size[1] // 2 - 16, *font.size(str(GameState().player_data.score))),
+            str(GameState().player_data.score),
             manager,
             container=self.container,
             object_id="blue_label"
@@ -194,22 +195,22 @@ class InGameMenu(UIScene):
 
         pygame_gui.elements.UILabel(
             pg.Rect(
-                size[0] - font.size("Robô")[0],
+                size[0] - font.size(GameState().enemy_data.name)[0],
                 size[1] // 2 - 32,
-                *font.size("Robô")
+                *font.size(GameState().enemy_data.name)
             ),
-            "Robô",
+            GameState().enemy_data.name,
             manager,
             container=self.container,
             object_id="red_label"
         )
         pygame_gui.elements.UILabel(
             pg.Rect(
-                size[0] - font.size("437")[0],
+                size[0] - font.size(str(GameState().enemy_data.score))[0],
                 size[1] // 2 - 16,
-                *font.size("437")
+                *font.size(str(GameState().enemy_data.score))
             ),
-            "437",
+            str(GameState().enemy_data.score),
             manager,
             container=self.container,
             object_id="red_label"
