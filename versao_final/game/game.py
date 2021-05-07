@@ -7,6 +7,7 @@ from game.enemy import Enemy
 from game.player import Player
 from game.sound import SoundManager
 from game.engine import DisplayManager, InputManager
+from game.utils import Singleton
 
 
 class Data:
@@ -41,7 +42,7 @@ class Data:
         self.__subscribers.append(observer)
 
 
-class GameState:
+class GameState(metaclass=Singleton):
     """ O estado da partida """
 
     def __init__(self, player_data: Data, enemy_data: Data):

@@ -10,14 +10,17 @@ from game.player import Player
 from game.sound import SoundManager
 from game.ui import UI
 from game.utils import Timer
-
+from game.game import Data
+from game.game import GameState
 
 SCREEN_SIZE = (400, 300)
 
 
 def main():
     """ Função principal do projeto """
-
+    player_data = Data("Player")
+    bot_data = Data("Bot")
+    game_state = GameState(player_data, bot_data)
     display = DisplayManager("Sort it!", SCREEN_SIZE)
     inputs = InputManager({
         'interact': 'space',
@@ -64,6 +67,7 @@ def main():
 
         enemy_timer.update(delta_time)
         gui.update(delta_time)
+        surface.fill((50, 50, 50))
 
         if gui.in_game():
             player.update()
@@ -71,7 +75,6 @@ def main():
             player_array.draw(surface)
             enemy_array.draw(surface)
 
-        surface.fill((50, 50, 50))
         gui.draw(surface)
         display.draw(surface)
 
