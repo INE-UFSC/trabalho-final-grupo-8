@@ -141,6 +141,20 @@ class SetupMenu(UIScene):
             container=self.container
         )
 
+        self.__Bubble = pygame_gui.elements.UILabel(
+            pg.Rect(50, 80, 90, 20),
+            "Bubble Sort: O algoritmo percorre o array diversas vezes, "
+            "e a cada passagem fazer flutuar para o topo o maior elemento da sequência"
+            "SelectionSort: A ordenacao e feita de forma que o algoritmo procura"
+            " o menor valor do array e o posiciona na primeira posicao, "
+            "trocando-o de lugar com o valor que ocupava tal posicao,"
+            " entao a busca pelo segundo menor comeca e ao fim "
+            "posiciona o segundo menor valor na segunda posicao e assim por diante.",
+            manager,
+            container=self.container,
+            object_id="description",
+        )
+
         self.__play_button = pygame_gui.elements.UIButton(
             pg.Rect(20, size[1] - 60, (size[0] // 2) - 25, 40),
             "Jogar",
