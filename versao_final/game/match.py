@@ -72,6 +72,16 @@ class Match:
         self.__enemy = enemy
         self.__set_array(array)
 
+    @property
+    def player(self) -> GameEntity:
+        """ O jogador """
+        return self.__player
+
+    @property
+    def enemy(self) -> GameEntity:
+        """ O adversário """
+        return self.__enemy
+
     def __set_array(self, array: List[int]) -> None:
         self.__player.array.numbers = array
         self.__enemy.array.numbers = array

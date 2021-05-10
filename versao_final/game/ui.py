@@ -4,7 +4,7 @@
 from enum import IntEnum
 from abc import ABC, abstractmethod
 from game.state import GameState
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 import pygame as pg
 import pygame_gui
 from game.enemy import EnemyInteractor, string_to_behaviour
@@ -202,10 +202,11 @@ class InGameMenu(UIScene):
 
     def __init__(
         self,
-        _: GameState,
+        state: GameState,
         manager: pygame_gui.UIManager,
         size: Tuple[int, int]
     ):
+        self.__state = state
         self.__container = pygame_gui.elements.UIPanel(
             pg.Rect(0, 0, *size),
             0,
@@ -213,66 +214,99 @@ class InGameMenu(UIScene):
         )
         self.disable()
 
-        # font = manager.get_theme().get_font_dictionary().find_font(16, "MatchupPro")
+        self.__font = manager.get_theme().get_font_dictionary().find_font(16, "MatchupPro")
+        self.__elements = {
+            'player_name': pygame_gui.elements.UILabel(
+                pg.Rect(0, size[1]//2 - 32, 16, 16),
+                "",
+                manager,
+                container=self.__container,
+                object_id="blue_label"
+            ),
+            'player_score': pygame_gui.elements.UILabel(
+                pg.Rect(0, size[1]//2, 16, 16),
+                "",
+                manager,
+                container=self.__container,
+                object_id="blue_label"
+            ),
 
-        # pygame_gui.elements.UILabel(
-        #     pg.Rect(0, size[1] // 2 - 32, *
-        #             font.size(GameState().player_data.name)),
-        #     GameState().player_data.name,
-        #     manager,
-        #     container=self.__container,
-        #     object_id="blue_label"
-        # )
-        # pygame_gui.elements.UILabel(
-        #     pg.Rect(0, size[1] // 2 - 16, *
-        #             font.size(str(GameState().player_data.score))),
-        #     str(GameState().player_data.score),
-        #     manager,
-        #     container=self.__container,
-        #     object_id="blue_label"
-        # )
+            'enemy_name': pygame_gui.elements.UILabel(
+                pg.Rect(0, size[1]//2 - 32, 16, 16),
+                "",
+                manager,
+                container=self.__container,
+                object_id="red_label",
+                anchors={
+                    'left': 'right',
+                    'right': 'right',
+                    'top': 'top',
+                    'bottom': 'bottom'
+                }
+            ),
+            'enemy_score': pygame_gui.elements.UILabel(
+                pg.Rect(0, size[1]//2, 16, 16),
+                "",
+                manager,
+                container=self.__container,
+                object_id="red_label",
+                anchors={
+                    'left': 'right',
+                    'right': 'right',
+                    'top': 'top',
+                    'bottom': 'bottom'
+                }
+            ),
 
-        # pygame_gui.elements.UILabel(
-        #     pg.Rect(
-        #         size[0] - font.size(GameState().enemy_data.name)[0],
-        #         size[1] // 2 - 32,
-        #         *font.size(GameState().enemy_data.name)
-        #     ),
-        #     GameState().enemy_data.name,
-        #     manager,
-        #     container=self.__container,
-        #     object_id="red_label"
-        # )
-        # pygame_gui.elements.UILabel(
-        #     pg.Rect(
-        #         size[0] - font.size(str(GameState().enemy_data.score))[0],
-        #         size[1] // 2 - 16,
-        #         *font.size(str(GameState().enemy_data.score))
-        #     ),
-        #     str(GameState().enemy_data.score),
-        #     manager,
-        #     container=self.__container,
-        #     object_id="red_label"
-        # )
+            'timer': pygame_gui.elements.UILabel(
+                pg.Rect(
+                    size[0] // 2 - 20,
+                    size[1] // 2,
+                    40,
+                    16
+                ),
+                "1:53",
+                manager,
+                container=self.__container,
+                object_id="yellow_label"
+            )
+        }
 
-        # pygame_gui.elements.UILabel(
-        #     pg.Rect(
-        #         size[0] // 2 - 20,
-        #         size[1] // 2,
-        #         40,
-        #         16
-        #     ),
-        #     "1:53",
-        #     manager,
-        #     container=self.__container,
-        #     object_id="yellow_label"
-        # )
+    def __update_label(
+        self,
+        element: str,
+        text: Union[str, int]
+    ):
+        text = str(text)
+        self.__elements[element].set_dimensions(self.__font.size(text))
+        if element.startswith('enemy'):
+            self.__elements[element].set_relative_position((
+                -self.__font.size(text)[0],
+                self.__elements[element].rect.y
+            ))
+        elif element == 'timer':
+            self.__elements[element].set_position((
+                self.__container.rect.w // 2 - self.__font.size(text),
+                self.__container.rect.h // 2
+            ))
+        self.__elements[element].set_text(text)
 
     @property
     def container(self) -> pygame_gui.elements.UIPanel:
         return self.__container
 
-    def handle_event(self, event: pg.event.Event):
+    def enable(self) -> None:
+        if self.__state.match is not None:
+            player = self.__state.match.player.data
+            enemy = self.__state.match.enemy.data
+            # timer = self.__state.match.timer
+            self.__update_label('player_name', player.name)
+            self.__update_label('player_score', player.score)
+            self.__update_label('enemy_name', enemy.name)
+            self.__update_label('enemy_score', enemy.score)
+        super().enable()
+
+    def handle_event(self, event: pg.event.Event) -> UIState:
         return UIState.IN_GAME
 
 
@@ -291,7 +325,7 @@ class UI:
         }
         self.__layouts[self.__state].enable()
 
-    @property
+    @ property
     def state(self):
         """ Retorna o estado atual da interface gráfica """
         return self.__state
