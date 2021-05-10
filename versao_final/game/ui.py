@@ -13,6 +13,26 @@ from game.state import GameState
 from game.utils import end
 
 
+# Implementar em JSON
+info_sorts = {
+        "Bubble Sort": ["O algoritmo percorre o array diversas vezes,",
+                       "e a cada passagem fazer flutuar para o topo o",
+                       "maior elemento da sequência."],
+
+        "Selection Sort": ["A ordenacao e feita de forma que o algoritmo procura",
+                           " o menor valor do array e o posiciona na primeira posicao, ",
+                           "trocando-o de lugar com o valor que ocupava tal posicao,",
+                           " entao a busca pelo segundo menor comeca e ao fim ",
+                           "posiciona o segundo menor valor na segunda posicao",
+                           "e assim por diante."],
+
+        "InsertionSort": "No Insertion Sort, o algoritimo percorre o array ",
+
+        "IterativeQuicksort": "bla",
+
+        " RecursiveQuicksort": "bla"
+    }
+
 class UIState(IntEnum):
     """ Estados possíveis da interface """
     MAIN_MENU = 0
@@ -152,6 +172,16 @@ class SetupMenu(UIScene):
             manager,
             container=self.__container
         )
+
+        # Colocar a borda e atualizar conforme for mudando o algoritmo selecionado.
+        for i in range(len(info_sorts[str(self.__algorithm.current_state.selected_option)])):
+            self.__Bubble = pygame_gui.elements.UILabel(
+                pg.Rect(20, (i * 10) + 80, 300, 20),
+                info_sorts[str(self.__algorithm.current_state.selected_option)][i],
+                manager,
+                container=self.container,
+                object_id="description",
+            )
 
         self.__play_button = pygame_gui.elements.UIButton(
             pg.Rect(20, size[1] - 60, (size[0] // 2) - 25, 40),
