@@ -3,13 +3,13 @@
 
 from enum import IntEnum
 from abc import ABC, abstractmethod
-from game.state import GameState
 from typing import Dict, Tuple, Union
 import pygame as pg
 import pygame_gui
 from game.enemy import EnemyInteractor, string_to_behaviour
 from game.algorithm import string_to_algorithm
 from game.match import Data
+from game.state import GameState
 from game.utils import end
 
 
@@ -325,7 +325,7 @@ class UI:
         }
         self.__layouts[self.__state].enable()
 
-    @ property
+    @property
     def state(self):
         """ Retorna o estado atual da interface gráfica """
         return self.__state
@@ -340,16 +340,16 @@ class UI:
         self.__state = next_state
         self.__layouts[self.__state].enable()
 
-    def update(self, delta_time: float):
-        """ Atualiza conforme o delta time """
-        self.__manager.update(delta_time)
-
     def handle_event(self, event):
         """ Lida com um evento específico """
         next_state = self.__layouts[self.__state].handle_event(event)
         self.__manager.process_events(event)
         if next_state != self.__state:
             self.change_state(next_state)
+
+    def update(self, delta_time: float):
+        """ Atualiza conforme o delta time """
+        self.__manager.update(delta_time)
 
     def draw(self, surface: pg.Surface):
         """ Desenha a interface apropriada na superfície """
