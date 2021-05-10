@@ -2,8 +2,11 @@
 
 
 from abc import ABC, abstractmethod
+from typing import Iterator, Optional
+from game.command import Command
+from game.array import Array
+from game.interactor import Interactor
 from game.sound import SoundManager
-from typing import Optional
 from game.algorithm import Algorithm
 from game.utils import Timer
 
@@ -30,17 +33,20 @@ class TimedBehaviour(Behaviour):
         return self.__timer.timeout
 
 
-class Enemy:
+class EnemyInteractor(Interactor):
     """ Classe responsável pela ordenação do array conforme um período de tempo especificado """
 
     def __init__(
         self,
         algorithm: Algorithm,
-        behaviour: Behaviour
+        behaviour: Behaviour,
     ):
         self.__algorithm = algorithm
         self.__behaviour = behaviour
-        self.__step_by_step = algorithm.one_step()
+        self.__sort_iterator: Optional[Iterator[Command]] = None
+
+    def set_array(self, array: Array) -> None:
+        self.__sort_iterator = self.__algorithm.sort(array)
 
     def update(self):
         """ Atualiza o timer e checa se o array deve ser organizado """
@@ -48,7 +54,7 @@ class Enemy:
             return
         if self.__behaviour.should_update():
             try:
-                next(self.__step_by_step).execute()
+                next(self.__sort_iterator).execute()
             except StopIteration:  # Ordenação finalizou...
                 SoundManager().play('finished')
 
@@ -60,19 +66,18 @@ class AttributesNotSetException(Exception):
         super().__init__("Os atributos do criador não estão definidos.")
 
 
-class EnemyBuilder:
+class EnemyInteractorBuilder:
     """ Responsável pela criação de inimigos """
 
     def __init__(self):
-        self.__enemy: Optional[Enemy] = None
+        self.__enemy: Optional[EnemyInteractor] = None
         self.__algorithm: Optional[Algorithm] = None
         self.__behaviour: Optional[Behaviour] = None
+        self.__array: Optional[Array] = None
 
     def reset(self) -> None:
         """ Reinicia o estado do criador """
         self.__enemy = None
-        self.__algorithm = None
-        self.__behaviour = None
 
     def set_algorithm(self, algorithm: Algorithm) -> None:
         """ Define o algoritmo a ser a utilizado pelo inimigo """
@@ -84,14 +89,21 @@ class EnemyBuilder:
         if isinstance(behaviour, Behaviour):
             self.__behaviour = behaviour
 
-    def get_result(self) -> Enemy:
+    def set_array(self, array: Array) -> None:
+        """ Define o array a ser ordenado pelo inimigo """
+        if isinstance(array, Array):
+            self.__array = array
+
+    def get_result(self) -> EnemyInteractor:
         """ Retorna o inimigo, caso todos os parâmetros estejam estabelecidos """
         if self.__enemy is None:
             if (
-                isinstance(self.__algorithm, Algorithm) and
-                isinstance(self.__behaviour, Behaviour)
+                self.__algorithm is not None and
+                self.__behaviour is not None and
+                self.__array is not None
             ):
-                self.__enemy = Enemy(self.__algorithm, self.__behaviour)
+                self.__enemy = EnemyInteractor(
+                    self.__algorithm, self.__behaviour, self.__array)
             else:
-                raise AttributesNotSetException()
+                raise AttributesNotSetException
         return self.__enemy

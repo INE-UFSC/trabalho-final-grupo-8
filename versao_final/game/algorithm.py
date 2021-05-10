@@ -12,41 +12,31 @@ class Algorithm(ABC):
     """ Base de um algoritmo """
 
     @abstractmethod
-    def one_step(self) -> Iterator[Command]:
+    def sort(self, box_array: Array) -> Iterator[Command]:
         """ Ordenar apenas um passo, por meio de um iterador """
 
     @abstractmethod
     def is_done(self) -> bool:
         """ Se o algoritmo já terminou a ordenação """
 
-    @abstractmethod
-    def description(self) -> str:
-        """ Retorna a descrição do algoritmo de ordenação"""
-
 
 class BubbleSort(Algorithm):
     """ Implementação do algoritmo de bubblesort: """
 
-    def __init__(self, array: Array):
-        self.__array = array
+    def __init__(self):
         self.__done = False
 
     def is_done(self) -> bool:
         return self.__done
 
-    def description(self) -> str:
-        return ("O algoritmo percorre o array diversas vezes, "
-                "e a cada passagem fazer flutuar para o topo o "
-                "maior elemento da sequência.")
-
-    def one_step(self) -> Iterator[Command]:
-        array = self.__array.numbers
+    def sort(self, box_array: Array) -> Iterator[Command]:
+        array = box_array.numbers
         less = 1
 
         while not self.__done:
             for i in range(len(array) - less):
                 if array[i] > array[i + 1]:
-                    yield SwapCommand(self.__array, i, i + 1)
+                    yield SwapCommand(box_array, i, i + 1)
             self.__done = is_sorted(array)
             less += 1
 
@@ -63,51 +53,43 @@ Partitioner = Callable[
 class RecursiveQuicksort(Algorithm):
     """ Implementação recursiva do algoritmo de quicksort """
 
-    def __init__(self, partitioner: Partitioner, array: Array):
+    def __init__(self, partitioner: Partitioner):
         self.__partitioner = partitioner
-        self.__array = array
         self.__done = False
 
     def is_done(self) -> bool:
         return self.__done
 
-    def description(self) -> str:
-        return ("bla")
-
-    def __sort(self, array: List[int], low: int, high: int) -> Iterator[Command]:
+    def __sort(self, box_array: Array, low: int, high: int) -> Iterator[Command]:
+        array = box_array.numbers
         if low < high:
             try:
                 partitions = self.__partitioner(array, low, high)
                 while True:
                     i, j = next(partitions)
-                    yield SwapCommand(self.__array, i, j)
+                    yield SwapCommand(box_array, i, j)
             except StopIteration as generator_done:
                 pivot = generator_done.value
-            yield from self.__sort(array, low, pivot - 1)
-            yield from self.__sort(array, pivot + 1, high)
+            yield from self.__sort(box_array, low, pivot - 1)
+            yield from self.__sort(box_array, pivot + 1, high)
 
-    def one_step(self) -> Iterator[Command]:
-        array = self.__array.numbers
-        yield from self.__sort(array, 0, len(array) - 1)
+    def sort(self, box_array: Array) -> Iterator[Command]:
+        yield from self.__sort(box_array, 0, len(box_array.numbers) - 1)
         self.__done = True
 
 
 class IterativeQuicksort(Algorithm):
     """ Implementação iterativa do quicksort, usando um stack """
 
-    def __init__(self, partitioner: Partitioner, array: Array):
+    def __init__(self, partitioner: Partitioner):
         self.__partitioner = partitioner
-        self.__array = array
         self.__done = False
 
     def is_done(self) -> bool:
         return self.__done
 
-    def description(self) -> str:
-        return ("bla")
-
-    def one_step(self) -> Iterator[Command]:
-        array = self.__array.numbers
+    def sort(self, box_array: Array) -> Iterator[Command]:
+        array = box_array.numbers
 
         stack: List[int] = []
         stack.append(0)
@@ -121,7 +103,7 @@ class IterativeQuicksort(Algorithm):
                 partitions = self.__partitioner(array, low, high)
                 while True:
                     i, j = next(partitions)
-                    yield SwapCommand(self.__array, i, j)
+                    yield SwapCommand(box_array, i, j)
             except StopIteration as generator_done:
                 pivot = generator_done.value
 
@@ -138,59 +120,45 @@ class IterativeQuicksort(Algorithm):
 class InsertionSort(Algorithm):
     """ Implementação do algoritmo de InsertionSort """
 
-    def __init__(
-        self,
-        array: Array
-    ):
-        self.__array = array
+    def __init__(self):
         self.__done = False
 
     def is_done(self) -> bool:
         return self.__done
 
-    def description(self) -> str:
-        return ("bla")
-
-    def one_step(self) -> Iterator[Command]:
+    def sort(self, box_array: Array) -> Iterator[Command]:
         """
         Verificará se os elementos anteriores são
         maiores ou menores que o atual para ordenar
         """
-        array = self.__array.numbers
+        array = box_array.numbers
         for i in range(1, len(array)):
             key = array[i]
             j = i - 1
             while j >= 0 and key < array[j]:
-                SetCommand(self.__array, j + 1, array[j]).execute()
+                SetCommand(box_array, j + 1, array[j]).execute()
                 j -= 1
-            yield SetCommand(self.__array, j + 1, key)
+            yield SetCommand(box_array, j + 1, key)
         self.__done = True
 
 
 class SelectionSort(Algorithm):
     """Implementação do algoritmo de Selectionsort:"""
 
-    def __init__(self, array: Array):
-        self.__array = array
+    def __init__(self):
         self.__done = False
 
     def is_done(self):
         return self.__done
 
-    def description(self) -> str:
-        return ("A ordenação é feita de forma que o algoritmo procura"
-                " o menor valor do array e o posiciona na primeira posição, "
-                "trocando-o de lugar com o valor que ocupava tal posicao,"
-                "o processo termina quando todos os valores estiverem ordenados.")
-
-    def one_step(self):
-        array = self.__array.numbers
+    def sort(self, box_array: Array):
+        array = box_array.numbers
         for i in range(len(array)):
             minimum_index = i
             for j in range(i + 1, len(array)):
                 if array[minimum_index] > array[j]:
                     minimum_index = j
-            yield SwapCommand(self.__array, minimum_index, i)
+            yield SwapCommand(box_array, minimum_index, i)
         self.__done = True
 
 

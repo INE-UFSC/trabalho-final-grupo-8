@@ -4,10 +4,27 @@
 from abc import ABC, abstractmethod
 from enum import IntEnum
 from typing import Dict, Tuple
-from game.game import GameState
 import pygame as pg
 import pygame_gui
+from game.state import GameState
+from game.match import Match
 from game.utils import end
+
+
+def enable_panel(
+    panel: pygame_gui.elements.UIPanel
+):
+    """ Ativa um painel da interface """
+    panel.enable()
+    panel.show()
+
+
+def disable_panel(
+    panel: pygame_gui.elements.UIPanel
+):
+    """ Desativa um painel da interface """
+    panel.disable()
+    panel.hide()
 
 
 class UIState(IntEnum):
@@ -22,65 +39,40 @@ class UIState(IntEnum):
 class UIScene(ABC):
     """ Representa uma tela da interface gráfica """
 
-    def __init__(
-        self,
-        manager: pygame_gui.UIManager,
-        size: Tuple[int, int],
-        object_id: str = "panel"
-    ):
-        """ Inicializa recebendo o manager e o tamanho da tela """
-        self.__container = pygame_gui.elements.UIPanel(
-            pg.Rect(0, 0, *size),
-            0,
-            manager,
-            object_id=object_id
-        )
-        self.disable()
-
     @abstractmethod
     def handle_event(self, event: pg.event.Event) -> UIState:
         """ O que deve ser feito para os eventos """
-
-    @property
-    def container(self):
-        """ O elemento que contem todos os widgets """
-        return self.__container
-
-    def enable(self):
-        """ Ativa a interface """
-        self.__container.enable()
-        self.__container.show()
-
-    def disable(self):
-        """ Desativa a interface """
-        self.__container.disable()
-        self.__container.hide()
 
 
 class MainMenu(UIScene):
     """ Representa o menu principal """
 
     def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
-        super().__init__(manager, size, "menu_background")
+        self.__container = pygame_gui.elements.UIPanel(
+            pg.Rect(0, 0, *size),
+            0,
+            manager
+        )
+
         pygame_gui.elements.UILabel(
             pg.Rect(0, 40, size[0], 48),
             "Sort it!",
             manager,
-            container=self.container,
+            container=self.__container,
             object_id="title"
         )
         self.__play_button = pygame_gui.elements.UIButton(
             pg.Rect(size[0] // 2 - 80, size[1] - 140, 160, 40),
             "Jogar",
             manager,
-            container=self.container,
+            container=self.__container,
             object_id="green_button"
         )
         self.__exit_button = pygame_gui.elements.UIButton(
             pg.Rect(size[0] // 2 - 80, size[1] - 80, 160, 40),
             "Sair",
             manager,
-            container=self.container,
+            container=self.__container,
             object_id="red_button"
         )
 
@@ -97,76 +89,70 @@ class MainMenu(UIScene):
 class SetupMenu(UIScene):
     """ Seleção do modo de jogo """
 
-    def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
-        super().__init__(manager, size, "menu_background")
+    def __init__(
+        self,
+        manager: pygame_gui.UIManager,
+        size: Tuple[int, int]
+    ):
+        self.__container = pygame_gui.elements.UIPanel(
+            pg.Rect(0, 0, *size),
+            0,
+            manager
+        )
 
         pygame_gui.elements.UILabel(
             pg.Rect(10, 10, 40, 20),
             "Nome:",
             manager,
-            container=self.container
+            container=self.__container
         )
         self.__name = pygame_gui.elements.UITextEntryLine(
             pg.Rect(50, 10, size[0] - 60, 20),
             manager,
-            container=self.container
+            container=self.__container
         )
-        self.__name.set_text(GameState().player_data.name)
+        self.__name.set_text("John Doe")
 
         pygame_gui.elements.UILabel(
             pg.Rect(10, 40, 40, 20),
             "Modo:",
             manager,
-            container=self.container
+            container=self.__container
         )
         self.__mode = pygame_gui.elements.UIDropDownMenu(
             ["Movimentos", "Tempo"],
             "Movimentos",
             pg.Rect(50, 40, size[0]-60, 20),
             manager,
-            container=self.container,
+            container=self.__container,
         )
 
         pygame_gui.elements.UILabel(
             pg.Rect(10, 70, 70, 20),
             "Algoritmo:",
             manager,
-            container=self.container
+            container=self.__container
         )
         self.__algorithm = pygame_gui.elements.UIDropDownMenu(
             ["Quick Sort", "Bubble Sort"],
             "Quick Sort",
             pg.Rect(80, 70, size[0]-90, 20),
             manager,
-            container=self.container
-        )
-
-        self.__Bubble = pygame_gui.elements.UILabel(
-            pg.Rect(50, 80, 90, 20),
-            "Bubble Sort: O algoritmo percorre o array diversas vezes, "
-            "e a cada passagem fazer flutuar para o topo o maior elemento da sequência"
-            "SelectionSort: A ordenacao e feita de forma que o algoritmo procura"
-            " o menor valor do array e o posiciona na primeira posicao, "
-            "trocando-o de lugar com o valor que ocupava tal posicao,"
-            " entao a busca pelo segundo menor comeca e ao fim "
-            "posiciona o segundo menor valor na segunda posicao e assim por diante.",
-            manager,
-            container=self.container,
-            object_id="description",
+            container=self.__container
         )
 
         self.__play_button = pygame_gui.elements.UIButton(
             pg.Rect(20, size[1] - 60, (size[0] // 2) - 25, 40),
             "Jogar",
             manager,
-            container=self.container,
+            container=self.__container,
             object_id="green_button"
         )
         self.__back_button = pygame_gui.elements.UIButton(
             pg.Rect(size[0] // 2 + 10, size[1] - 60, (size[0] // 2) - 25, 40),
             "Voltar",
             manager,
-            container=self.container,
+            container=self.__container,
             object_id="red_button"
         )
 
@@ -174,77 +160,75 @@ class SetupMenu(UIScene):
         if event.type == pg.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.__play_button:
-                    # game_state = GameState()
-                    # name = self.__name.get_text()
-                    # mode = self.__mode.current_state.selected_option
-                    # algorithm = self.__algorithm.current_state.selected_option
                     return UIState.IN_GAME
                 if event.ui_element == self.__back_button:
                     return UIState.MAIN_MENU
         return UIState.SETUP_MENU
 
 
-class InGameMenu(UIScene):
-    """ Tela a ser mostrada durante o jogo """
+# class InGameMenu(UIScene):
+#     """ Tela a ser mostrada durante o jogo """
 
-    def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
-        super().__init__(manager, size)
+#     def __init__(self, manager: pygame_gui.UIManager, size: Tuple[int, int]):
+#         super().__init__(manager, size)
 
-        font = manager.get_theme().get_font_dictionary().find_font(16, "MatchupPro")
+#         font = manager.get_theme().get_font_dictionary().find_font(16, "MatchupPro")
 
-        pygame_gui.elements.UILabel(
-            pg.Rect(0, size[1] // 2 - 32, *font.size(GameState().player_data.name)),
-            GameState().player_data.name,
-            manager,
-            container=self.container,
-            object_id="blue_label"
-        )
-        pygame_gui.elements.UILabel(
-            pg.Rect(0, size[1] // 2 - 16, *font.size(str(GameState().player_data.score))),
-            str(GameState().player_data.score),
-            manager,
-            container=self.container,
-            object_id="blue_label"
-        )
+#         pygame_gui.elements.UILabel(
+#             pg.Rect(0, size[1] // 2 - 32, *
+#                     font.size(GameState().player_data.name)),
+#             GameState().player_data.name,
+#             manager,
+#             container=self.__container,
+#             object_id="blue_label"
+#         )
+#         pygame_gui.elements.UILabel(
+#             pg.Rect(0, size[1] // 2 - 16, *
+#                     font.size(str(GameState().player_data.score))),
+#             str(GameState().player_data.score),
+#             manager,
+#             container=self.__container,
+#             object_id="blue_label"
+#         )
 
-        pygame_gui.elements.UILabel(
-            pg.Rect(
-                size[0] - font.size(GameState().enemy_data.name)[0],
-                size[1] // 2 - 32,
-                *font.size(GameState().enemy_data.name)
-            ),
-            GameState().enemy_data.name,
-            manager,
-            container=self.container,
-            object_id="red_label"
-        )
-        pygame_gui.elements.UILabel(
-            pg.Rect(
-                size[0] - font.size(str(GameState().enemy_data.score))[0],
-                size[1] // 2 - 16,
-                *font.size(str(GameState().enemy_data.score))
-            ),
-            str(GameState().enemy_data.score),
-            manager,
-            container=self.container,
-            object_id="red_label"
-        )
+#         pygame_gui.elements.UILabel(
+#             pg.Rect(
+#                 size[0] - font.size(GameState().enemy_data.name)[0],
+#                 size[1] // 2 - 32,
+#                 *font.size(GameState().enemy_data.name)
+#             ),
+#             GameState().enemy_data.name,
+#             manager,
+#             container=self.__container,
+#             object_id="red_label"
+#         )
+#         pygame_gui.elements.UILabel(
+#             pg.Rect(
+#                 size[0] - font.size(str(GameState().enemy_data.score))[0],
+#                 size[1] // 2 - 16,
+#                 *font.size(str(GameState().enemy_data.score))
+#             ),
+#             str(GameState().enemy_data.score),
+#             manager,
+#             container=self.__container,
+#             object_id="red_label"
+#         )
 
-        pygame_gui.elements.UILabel(
-            pg.Rect(
-                size[0] // 2 - 20,
-                size[1] // 2,
-                40,
-                16
-            ),
-            "1:53",
-            manager,
-            container=self.container,
-            object_id="yellow_label"
-        )
+#         pygame_gui.elements.UILabel(
+#             pg.Rect(
+#                 size[0] // 2 - 20,
+#                 size[1] // 2,
+#                 40,
+#                 16
+#             ),
+#             "1:53",
+#             manager,
+#             container=self.__container,
+#             object_id="yellow_label"
+#         )
 
-    def handle_event(self, event: pg.event.Event):
-        return UIState.IN_GAME
+#     def handle_event(self, event: pg.event.Event):
+#         return UIState.IN_GAME
 
 
 class UI:
@@ -258,7 +242,7 @@ class UI:
         self.__layouts: Dict[UIState, UIScene] = {
             UIState.MAIN_MENU: MainMenu(self.__manager, size),
             UIState.SETUP_MENU: SetupMenu(self.__manager, size),
-            UIState.IN_GAME: InGameMenu(self.__manager, size)
+            # UIState.IN_GAME: InGameMenu(self.__manager, size)
         }
         self.__layouts[self.__state].enable()
 

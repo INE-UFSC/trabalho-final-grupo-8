@@ -7,7 +7,6 @@ from game.enemy import Enemy
 from game.player import Player
 from game.sound import SoundManager
 from game.engine import DisplayManager, InputManager
-from game.utils import Singleton
 
 
 class Data:
@@ -20,7 +19,6 @@ class Data:
             raise ValueError
         self.__name = name
         self.__score = 0
-        self.__subscribers: list = []
 
     @property
     def name(self) -> str:
@@ -37,12 +35,8 @@ class Data:
         """ Define uma nova pontuação ao jogador """
         self.__score = score
 
-    def subscribe(self, observer):
-        """ Adiciona um subscriber a estes dados """
-        self.__subscribers.append(observer)
 
-
-class GameState(metaclass=Singleton):
+class GameState():
     """ O estado da partida """
 
     def __init__(self, player_data: Data, enemy_data: Data):

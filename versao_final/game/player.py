@@ -1,24 +1,24 @@
 """ Módulo para a implementação do player """
 
 
+from typing import Optional
 from game.array import Array, Box
 from game.engine import InputManager
+from game.interactor import Interactor
 from game.sound import SoundManager
 
 
-class Player:
+class PlayerInteractor(Interactor):
     """ Classe responsável pelo controle do player """
 
-    def __init__(
-        self,
-        array: Array,
-        inputs: InputManager
-    ):
-        self.__array = array
+    def __init__(self, inputs: InputManager):
+        self.__array: Optional[Array] = None
         self.__inputs = inputs
 
     def __drop_box(self, dragging: Box):
         """ Solta a caixa """
+        if self.__array is None:
+            return
         for box in self.__array.boxes:
             if (
                 box != dragging and
@@ -38,6 +38,9 @@ class Player:
         box_under_cursor = None
         dragging = None
 
+        if self.__array is None:
+            return
+
         for box in self.__array.boxes:
             if box.rect.collidepoint(*self.__inputs.mouse_pos):
                 box_under_cursor = box
@@ -54,6 +57,11 @@ class Player:
 
         if dragging is not None:
             dragging.rect.center = self.__inputs.mouse_pos
+
+    def set_array(self, array: Array) -> None:
+        if not isinstance(array, Array):
+            raise TypeError
+        self.__array = array
 
     def update(self):
         """ Atualiza a interação do player com o seu array """
