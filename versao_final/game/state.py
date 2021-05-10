@@ -2,14 +2,15 @@
 
 
 from typing import Optional
-from game.utils import Singleton
-from game.match import Match
+import pygame as pg
+from game.match import Match, MatchFactory
 
 
-class GameState(metaclass=Singleton):
+class GameState():
     """ Representa o estado do jogo """
 
-    def __init__(self):
+    def __init__(self, match_factory: MatchFactory):
+        self.__match_factory = match_factory
         self.__match: Optional[Match] = None
 
     @property
@@ -20,4 +21,17 @@ class GameState(metaclass=Singleton):
     @match.setter
     def match(self, match: Match) -> None:
         """ Define uma nova partida """
+        if not isinstance(match, Match):
+            raise TypeError
         self.__match = match
+
+    @property
+    def match_factory(self) -> MatchFactory:
+        """ Retorna a fábrica de partidas """
+        return self.__match_factory
+
+    def draw(self, surface: pg.Surface):
+        """ Desenha o jogo """
+        if self.__match is not None:
+            self.__match.update()
+            self.__match.draw(surface)

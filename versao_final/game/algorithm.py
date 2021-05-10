@@ -50,35 +50,7 @@ Partitioner = Callable[
 ]
 
 
-class RecursiveQuicksort(Algorithm):
-    """ Implementação recursiva do algoritmo de quicksort """
-
-    def __init__(self, partitioner: Partitioner):
-        self.__partitioner = partitioner
-        self.__done = False
-
-    def is_done(self) -> bool:
-        return self.__done
-
-    def __sort(self, box_array: Array, low: int, high: int) -> Iterator[Command]:
-        array = box_array.numbers
-        if low < high:
-            try:
-                partitions = self.__partitioner(array, low, high)
-                while True:
-                    i, j = next(partitions)
-                    yield SwapCommand(box_array, i, j)
-            except StopIteration as generator_done:
-                pivot = generator_done.value
-            yield from self.__sort(box_array, low, pivot - 1)
-            yield from self.__sort(box_array, pivot + 1, high)
-
-    def sort(self, box_array: Array) -> Iterator[Command]:
-        yield from self.__sort(box_array, 0, len(box_array.numbers) - 1)
-        self.__done = True
-
-
-class IterativeQuicksort(Algorithm):
+class Quicksort(Algorithm):
     """ Implementação iterativa do quicksort, usando um stack """
 
     def __init__(self, partitioner: Partitioner):
@@ -198,3 +170,19 @@ def hoare_partitioner(
             yield (low, high)
     yield (high, pivot_index)
     return high
+
+
+def string_to_algorithm(name: str) -> Algorithm:
+    """
+    Converte uma string para um algoritmo específico
+
+    Lançará um KeyError caso o algoritmo não exista
+    """
+    algorithms = {
+        "Quicksort (Lomuto)": Quicksort(lomuto_partitioner),
+        "Quicksort (Hoare)": Quicksort(hoare_partitioner),
+        "Bubble Sort": BubbleSort(),
+        "Selection Sort": SelectionSort(),
+        "Insertion Sort": InsertionSort()
+    }
+    return algorithms[name]

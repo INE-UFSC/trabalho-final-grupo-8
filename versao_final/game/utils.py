@@ -49,6 +49,7 @@ class Timer:
         self.__paused = not auto_start
         self.__one_shot = one_shot
         self.__timeout = False
+        TimerList().add_timer(self)
 
     @property
     def paused(self):
@@ -81,3 +82,20 @@ class Timer:
                     self.__paused = True
                 else:
                     self.start()
+
+
+class TimerList(metaclass=Singleton):
+    """ Responsável por atualizar todos os timers """
+
+    def __init__(self):
+        self.__timers: List[Timer] = []
+
+    def add_timer(self, timer: Timer) -> None:
+        if not isinstance(timer, Timer):
+            raise TypeError
+        self.__timers.append(timer)
+
+    def update(self, delta_time: float) -> None:
+        """ Atualiza todos os timers """
+        for timer in self.__timers:
+            timer.update(delta_time)
