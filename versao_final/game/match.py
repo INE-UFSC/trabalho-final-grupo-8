@@ -91,8 +91,8 @@ class Match:
         return self.__enemy
 
     def __set_array(self, array: List[int]) -> None:
-        self.__player.array.numbers = array
-        self.__enemy.array.numbers = array
+        self.__player.array.numbers = array.copy()
+        self.__enemy.array.numbers = array.copy()
 
     def update(self):
         """ Atualiza a partida """
