@@ -32,6 +32,7 @@ class UIState(IntEnum):
     IN_GAME = 2
     VICTORY = 3
     DEFEAT = 4
+    INFO_MENU = 5
 
 
 class UIScene(ABC):
@@ -79,7 +80,43 @@ class UIScene(ABC):
         self.__container.disable()
         self.__container.hide()
 
+class info(UIScene):
+    """ Dá informações sobre o tempo de execução dos algoritmos """
+    def make_elements(self):
+        size = self.container.rect.size
+        manager = self.container.ui_manager
 
+        self.elements["Voltar"] = pygame_gui.elements.UIButton(
+            pg.Rect(size[0] // 2 - 80, size[1] - 60, (size[0] // 2) - 25, 40),
+            "Voltar",
+            manager,
+            container=self.container,
+            object_id="voltar"
+            )
+        
+        self.elements["BigOWorst"] = pygame_gui.elements.UITextBox(
+            "Despacito",
+            pg.Rect(10, 100, size[0]-20, 50),
+            manager,
+            container=self.container
+        )
+        self.elements["BigOAvg"] = pygame_gui.elements.UITextBox(
+            "Despacito",
+            pg.Rect(10, 100, size[0]-20, 130),
+            manager,
+            container=self.container
+        )
+
+    def handle_event(self, event: pg.event.Event) -> UIState:
+        if event.type == pg.USEREVENT:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.elements["Voltar"]:
+                    return UIState.SETUP_MENU
+        return UIState.INFO_MENU
+    
+    
+        
+        
 class MainMenu(UIScene):
     """ A tela inicial do jogo """
 
@@ -159,8 +196,15 @@ class SetupMenu(UIScene):
             manager,
             container=self.container
         )
+        self.elements["InfoButton"] = pygame_gui.elements.UIButton(
+            pg.Rect(size[0]/2 + 10, size[1] - 60, (size[0] // 2) - 25, 40),
+            "Info",
+            manager,
+            container=self.container,
+            object_id="info_button"
+        )
         self.elements["PlayButton"] = pygame_gui.elements.UIButton(
-            pg.Rect(20, size[1] - 60, (size[0] // 2) - 25, 40),
+            pg.Rect(10, size[1] - 60, (size[0] // 2) - 25, 40),
             "Jogar",
             manager,
             container=self.container,
@@ -178,6 +222,8 @@ class SetupMenu(UIScene):
                     #     pygame_gui.TEXT_EFFECT_TYPING_APPEAR
                     # )
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.elements["InfoButton"]:
+                    return UIState.INFO_MENU
                 if event.ui_element == self.elements["PlayButton"]:
                     name = self.elements["NameBox"].get_text()
                     mode = self.elements["ModeSelector"].current_state.selected_option
@@ -314,7 +360,8 @@ class UI:
         self.__layouts: Dict[UIState, UIScene] = {
             UIState.MAIN_MENU: MainMenu(self.__manager, size),
             UIState.SETUP_MENU: SetupMenu(game_state, self.__manager, size),
-            UIState.IN_GAME: InGameMenu(game_state, self.__manager, size)
+            UIState.IN_GAME: InGameMenu(game_state, self.__manager, size),
+            UIState.INFO_MENU: info(self.__manager, size)
         }
         self.__layouts[self.__state].enable()
 
