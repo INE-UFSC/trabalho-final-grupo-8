@@ -26,13 +26,23 @@ info_sorts = {
                            "posiciona o segundo menor valor na segunda posicao",
                            "e assim por diante."],
 
-        "InsertionSort": "No Insertion Sort, o algoritimo percorre o array ",
+        "InsertionSort": ["Essa ordenação funciona como organizar cartas na mão, onde há",
+        " uma parte organizada e outra não. A ordenação acontece avançando para a parte não organizada",
+        " um item por vez, esse item é posto no lugar certo na parte ordenada, verificando do ultimo item organizado",
+        " até o primero, parando quando encontrar um número menor"
+        ],
 
         "IterativeQuicksort": "bla",
 
-        "RecursiveQuicksort": "bla",
+        "RecursiveQuicksort": ["O QuickSort escolhe o ulitmo como pivô da operação de ordenação e o comparará com elementos anteriores",
+        " os separando em três grupos: menor, maior e igual. Isso três arrays distintos que precisam ser ordenados(exceto o de igualdade). ",
+        " Para que isso aconteça, basta aplicar de novo a operação de quicksort em cada um desses arrays, até que eles fiquem com um elemento cada",
+        " após isso, basta juntar os arrays e o resultado será o vetor ordenado "],
         
-        "Quicksort (Lomuto)": "bla"
+        "Quicksort (Lomuto)": ["O QuickSort escolhe o ulitmo como pivô da operação de ordenação e o comparará com elementos anteriores",
+        " os separando em três grupos: menor, maior e igual. Isso três arrays distintos que precisam ser ordenados(exceto o de igualdade). ",
+        " Para que isso aconteça, basta aplicar de novo a operação de quicksort em cada um desses arrays, até que eles fiquem com um elemento cada",
+        " após isso, basta juntar os arrays e o resultado será o vetor ordenado "]
     }
 
 class UIState(IntEnum):
