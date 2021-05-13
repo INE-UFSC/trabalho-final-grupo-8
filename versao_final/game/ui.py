@@ -30,7 +30,9 @@ info_sorts = {
 
         "IterativeQuicksort": "bla",
 
-        " RecursiveQuicksort": "bla"
+        "RecursiveQuicksort": "bla",
+        
+        "Quicksort (Lomuto)": "bla"
     }
 
 class UIState(IntEnum):
@@ -44,6 +46,21 @@ class UIState(IntEnum):
 
 class UIScene(ABC):
     """ Representa uma tela da interface gráfica """
+
+    def __init__(
+        self,
+        manager: pygame_gui.UIManager,
+        size: Tuple[int, int],
+        object_id: str = "panel"
+    ):
+        """ Inicializa recebendo o manager e o tamanho da tela """
+        self.__container = pygame_gui.elements.UIPanel(
+            pg.Rect(0, 0, *size),
+            0,
+            manager,
+            object_id=object_id
+        )
+        self.disable()
 
     @abstractmethod
     def handle_event(self, event: pg.event.Event) -> UIState:

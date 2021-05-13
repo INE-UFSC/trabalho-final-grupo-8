@@ -99,9 +99,9 @@
              "text_shadow_offset": "0,0"
     },
      "font": {
-       "name": "UnKnown",
+       "name": "OpenSansPXBold",
        "size": 8,
-       "regular_path": "assets/04B_03__.ttf"
+       "regular_path": "assets/OpenSansPXBold.ttf"
      }
   },
 
