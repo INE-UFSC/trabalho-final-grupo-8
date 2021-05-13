@@ -325,7 +325,7 @@ class UI:
 
     def in_game(self):
         """ Se está no estado de jogo """
-        return self.__state == UIState.SETUP_MENU
+        return self.__state == UIState.IN_GAME
 
     def change_state(self, next_state: UIState):
         """ Troca de estado """

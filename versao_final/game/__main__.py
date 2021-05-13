@@ -54,11 +54,11 @@ def main():
         timers.update(delta_time)
         gui.update(delta_time)
         surface.fill((50, 50, 50))
+        gui.draw(surface)
 
         if gui.in_game():
             state.draw(surface)
 
-        gui.draw(surface)
         display.draw(surface)
 
 
