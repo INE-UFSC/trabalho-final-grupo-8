@@ -59,7 +59,7 @@
   "label": {
     "font": {
       "name": "OpenSansPXBold",
-      "size": 16,
+      "size": 16.0,
       "regular_path": "assets/OpenSansPXBold.ttf"
     },
     "misc": {
@@ -94,15 +94,15 @@
       "normal_text": "#ffffff"
     },
     "misc": {
-             "text_shadow": "1",
-             "text_shadow_size": "1",
-             "text_shadow_offset": "0,0"
+      "text_shadow": "1",
+      "text_shadow_size": "1",
+      "text_shadow_offset": "0,0"
     },
-     "font": {
-       "name": "OpenSansPXBold",
-       "size": 8,
-       "regular_path": "assets/OpenSansPXBold.ttf"
-     }
+    "font": {
+      "name": "OpenSansPXBold",
+      "size": 8,
+      "regular_path": "assets/OpenSansPXBold.ttf"
+    }
   },
 
   "title": {

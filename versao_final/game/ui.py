@@ -3,7 +3,7 @@
 
 from enum import IntEnum
 from abc import ABC, abstractmethod
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 import pygame_gui
 import pygame as pg
 from pygame_gui.core.ui_element import UIElement
@@ -11,6 +11,18 @@ from game.algorithm import string_to_algorithm
 from game.enemy import EnemyInteractor, string_to_behaviour
 from game.match import Data
 from game.state import GameState
+from game.utils import end
+
+
+INFO_SORTS = {
+    "Bubble Sort": "O algoritmo percorre o array diversas vezes, e a cada passagem fazer flutuar para o topo o maior elemento da sequência.",
+
+    "Selection Sort": "A ordenacao e feita de forma que o algoritmo procura o menor valor do array e o posiciona na primeira posicao, trocando-o de lugar com o valor que ocupava tal posicao, entao a busca pelo segundo menor comeca e ao fim posiciona o segundo menor valor na segunda posicao e assim por diante.",
+
+    "InsertionSort": "Essa ordenação funciona como organizar cartas na mão, onde há uma parte organizada e outra não. A ordenação acontece avançando para a parte não organizada um item por vez, esse item é posto no lugar certo na parte ordenada, verificando do ultimo item organizado até o primero, parando quando encontrar um número menor",
+
+    "Quicksort (Lomuto)": "O QuickSort escolhe o último como pivô da operação de ordenação e o comparará com elementos anteriores os separando em três grupos: menor, maior e igual. Isso três arrays distintos que precisam ser ordenados(exceto o de igualdade). Para que isso aconteça, basta aplicar de novo a operação de quicksort em cada um desses arrays, até que eles fiquem com um elemento cada após isso, basta juntar os arrays e o resultado será o vetor ordenado."
+}
 
 
 class UIState(IntEnum):
@@ -36,8 +48,8 @@ class UIScene(ABC):
             0,
             manager
         )
-        self.make_elements()
         self.disable()
+        self.make_elements()
 
     @abstractmethod
     def handle_event(self, event: pg.event.Event) -> UIState:
@@ -66,6 +78,45 @@ class UIScene(ABC):
         """ Desativa a interface """
         self.__container.disable()
         self.__container.hide()
+
+
+class MainMenu(UIScene):
+    """ A tela inicial do jogo """
+
+    def make_elements(self):
+        size = self.container.rect.size
+        manager = self.container.ui_manager
+
+        pygame_gui.elements.UILabel(
+            pg.Rect(0, 40, size[0], 48),
+            "Sort it!",
+            manager,
+            container=self.container,
+            object_id="title"
+        )
+        self.elements["PlayButton"] = pygame_gui.elements.UIButton(
+            pg.Rect(size[0] // 2 - 80, size[1] - 140, 160, 40),
+            "Jogar",
+            manager,
+            container=self.container,
+            object_id="green_button"
+        )
+        self.elements["ExitButton"] = pygame_gui.elements.UIButton(
+            pg.Rect(size[0] // 2 - 80, size[1] - 80, 160, 40),
+            "Sair",
+            manager,
+            container=self.container,
+            object_id="red_button"
+        )
+
+    def handle_event(self, event: pg.event.Event) -> UIState:
+        if event.type == pg.USEREVENT:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.elements["PlayButton"]:
+                    return UIState.SETUP_MENU
+                if event.ui_element == self.elements["ExitButton"]:
+                    end()
+        return UIState.MAIN_MENU
 
 
 class SetupMenu(UIScene):
@@ -120,11 +171,12 @@ class SetupMenu(UIScene):
         if event.type == pg.USEREVENT:
             if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
                 if event.ui_element == self.elements["AlgorithmSelector"]:
-                    self.elements["AlgorithmDescription"].html_text = event.text
+                    self.elements[
+                        "AlgorithmDescription"].html_text = INFO_SORTS[event.text]
                     self.elements["AlgorithmDescription"].rebuild()
-                    self.elements["AlgorithmDescription"].set_active_effect(
-                        pygame_gui.TEXT_EFFECT_TYPING_APPEAR
-                    )
+                    # self.elements["AlgorithmDescription"].set_active_effect(
+                    #     pygame_gui.TEXT_EFFECT_TYPING_APPEAR
+                    # )
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.elements["PlayButton"]:
                     name = self.elements["NameBox"].get_text()
@@ -155,6 +207,7 @@ class InGameMenu(UIScene):
     def __init__(self, state: GameState, manager: pygame_gui.UIManager, size: Tuple[int, int]):
         super().__init__(manager, size)
         self.__state = state
+        self.__font = manager.get_theme().get_font_dictionary().find_font(16, "MatchupPro")
 
     def make_elements(self):
         size = self.container.rect.size
@@ -186,7 +239,7 @@ class InGameMenu(UIScene):
                 'top': 'top',
                 'bottom': 'bottom'
             }
-        ),
+        )
         self.elements['EnemyScore'] = pygame_gui.elements.UILabel(
             pg.Rect(0, size[1]//2, 16, 16),
             "",
@@ -202,10 +255,10 @@ class InGameMenu(UIScene):
         )
         self.elements['Timer'] = pygame_gui.elements.UILabel(
             pg.Rect(
-                size[0] // 2 - 20,
+                size[0] // 2 - 32,
                 size[1] // 2,
-                40,
-                16
+                64,
+                32
             ),
             "",
             manager,
@@ -213,10 +266,40 @@ class InGameMenu(UIScene):
             object_id="yellow_label"
         )
 
+    def __update_label(
+        self,
+        element: str,
+        text: Union[str, int]
+    ):
+        text = str(text)
+        self.elements[element].set_dimensions(self.__font.size(text))
+        if element.startswith('Enemy'):
+            self.elements[element].set_relative_position((
+                -self.__font.size(text)[0],
+                self.elements[element].rect.y
+            ))
+        elif element == 'timer':
+            self.elements[element].set_position((
+                self.container.rect.w // 2 - self.__font.size(text),
+                self.container.rect.h // 2
+            ))
+        self.elements[element].set_text(text)
+
     def handle_event(self, event: pg.event.Event) -> UIState:
         if event.type == pg.USEREVENT:
             pass
         return UIState.IN_GAME
+
+    def enable(self):
+        if self.__state.match is not None:
+            player = self.__state.match.player.data
+            enemy = self.__state.match.enemy.data
+            # timer = self.__state.match.timer
+            self.__update_label('PlayerName', player.name)
+            self.__update_label('PlayerScore', player.score)
+            self.__update_label('EnemyName', enemy.name)
+            self.__update_label('EnemyScore', enemy.score)
+        super().enable()
 
 
 class UI:
@@ -225,16 +308,17 @@ class UI:
     def __init__(self, game_state: GameState, size: Tuple[int, int]):
         self.__manager = pygame_gui.UIManager(
             size,
-            # theme_path="./assets/theme.json"
+            theme_path="./assets/theme.json"
         )
-        self.__state: UIState = UIState.SETUP_MENU
+        self.__state: UIState = UIState.MAIN_MENU
         self.__layouts: Dict[UIState, UIScene] = {
+            UIState.MAIN_MENU: MainMenu(self.__manager, size),
             UIState.SETUP_MENU: SetupMenu(game_state, self.__manager, size),
             UIState.IN_GAME: InGameMenu(game_state, self.__manager, size)
         }
         self.__layouts[self.__state].enable()
 
-    @ property
+    @property
     def state(self):
         """ Retorna o estado atual da interface gráfica """
         return self.__state

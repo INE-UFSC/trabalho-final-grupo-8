@@ -33,6 +33,14 @@ class Data:
         """ Define uma nova pontuação """
         self.__score = score
 
+        event_id = pg.event.custom_type()
+        print(event_id)
+        pg.event.Event(
+            event_id,
+            value=self.__score,
+            name=self.__name
+        )
+
 
 class GameEntity:
     """ Uma entidade que possui interação com o array, dados e um array """
