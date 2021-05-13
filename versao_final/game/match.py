@@ -1,10 +1,16 @@
 """ Módulo relacionado à partida """
 
 
-from typing import List, Optional
+from abc import abstractmethod
+from game.sound import SoundManager
+from typing import Optional
+import random
 import pygame as pg
 from game.array import Array
 from game.interactor import Interactor
+
+
+SCORE_CHANGED = pg.event.custom_type()
 
 
 class Data:
@@ -32,14 +38,12 @@ class Data:
     def score(self, score: int) -> None:
         """ Define uma nova pontuação """
         self.__score = score
-
-        event_id = pg.event.custom_type()
-        print(event_id)
-        pg.event.Event(
-            event_id,
+        event = pg.event.Event(
+            SCORE_CHANGED,
             value=self.__score,
             name=self.__name
         )
+        pg.event.post(event)
 
 
 class GameEntity:
@@ -73,12 +77,12 @@ class Match:
     def __init__(
         self,
         player: GameEntity,
-        enemy: GameEntity,
-        array: List[int]
+        enemy: GameEntity
     ):
         self.__player = player
         self.__enemy = enemy
-        self.__set_array(array)
+        self.__set_new_array(player)
+        self.__set_new_array(enemy)
 
     @property
     def player(self) -> GameEntity:
@@ -90,14 +94,22 @@ class Match:
         """ O adversário """
         return self.__enemy
 
-    def __set_array(self, array: List[int]) -> None:
-        self.__player.array.numbers = array.copy()
-        self.__enemy.array.numbers = array.copy()
+    @abstractmethod
+    def __set_new_array(self, entity: GameEntity):
+        """ Define um novo array para uma entidade """
+        new_array = list(range(10))
+        random.shuffle(new_array)
+        entity.array.numbers = new_array
+        entity.interactor.set_array(entity.array)
 
     def update(self):
         """ Atualiza a partida """
-        self.__player.interactor.update()
-        self.__enemy.interactor.update()
+        for entity in [self.__player, self.__enemy]:
+            entity.interactor.update()
+            if entity.array.is_sorted():
+                SoundManager().play('finished')
+                entity.data.score += 10
+                self.__set_new_array(entity)
 
     def draw(self, surface: pg.Surface):
         """ Desenha os arrays """
@@ -181,10 +193,9 @@ class MatchFactory:
         """ O criador do adversário """
         return self.__enemy
 
-    def create(self, array: List[int]):
+    def create(self):
         """ Cria a partida """
         return Match(
             self.__player.get_result(),
-            self.__enemy.get_result(),
-            array
+            self.__enemy.get_result()
         )

@@ -89,6 +89,7 @@ class Array:
         self.__box_factory = box_factory
         self.__boxes: list[Box] = []
         self.__numbers: list[int] = []
+        self.__sorted_numbers: list[int] = []
         self.__should_redraw = True
         self.__y_pos = y_pos
 
@@ -106,6 +107,7 @@ class Array:
     def numbers(self, numbers: List[int]) -> None:
         """ Associa uma lista à esse array """
         self.__numbers = numbers
+        self.__sorted_numbers = sorted(numbers)
         self.__boxes = list(map(self.__box_factory.create, numbers))
         self.__should_redraw = True
 
@@ -113,6 +115,10 @@ class Array:
     def box_factory(self):
         """ O criador de caixas """
         return self.__box_factory
+
+    def is_sorted(self) -> bool:
+        """ Retorna se o array está ordenado """
+        return self.__numbers == self.__sorted_numbers
 
     def __boxes_to_draw(self) -> List[Tuple[pg.Surface, pg.Rect]]:
         """

@@ -6,7 +6,6 @@ from typing import Iterator, Optional
 from game.command import Command
 from game.array import Array
 from game.interactor import Interactor
-from game.sound import SoundManager
 from game.algorithm import Algorithm
 from game.utils import Timer
 
@@ -67,4 +66,4 @@ class EnemyInteractor(Interactor):
                 command = next(self.__sort_iterator)
                 command.execute()
             except StopIteration:  # Ordenação finalizou...
-                SoundManager().play('finished')
+                pass

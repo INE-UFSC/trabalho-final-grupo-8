@@ -9,7 +9,7 @@ import pygame as pg
 from pygame_gui.core.ui_element import UIElement
 from game.algorithm import string_to_algorithm
 from game.enemy import EnemyInteractor, string_to_behaviour
-from game.match import Data
+from game.match import Data, SCORE_CHANGED
 from game.state import GameState
 from game.utils import end
 
@@ -192,9 +192,7 @@ class SetupMenu(UIScene):
                                 string_to_behaviour(mode)
                             )
                         )
-                        self.__state.match = self.__state.match_factory.create(
-                            [15, 0, 10, 8, 2, 1, 5, 7]
-                        )
+                        self.__state.match = self.__state.match_factory.create()
                     except ValueError:
                         print("Erro na construção do jogo...")
                     return UIState.IN_GAME
@@ -286,8 +284,17 @@ class InGameMenu(UIScene):
         self.elements[element].set_text(text)
 
     def handle_event(self, event: pg.event.Event) -> UIState:
-        if event.type == pg.USEREVENT:
-            pass
+        if self.__state.match is not None:
+            if event.type == SCORE_CHANGED:
+                player = self.__state.match.player.data
+                enemy = self.__state.match.enemy.data
+                for entity, label in [(player, "PlayerScore"), (enemy, "EnemyScore")]:
+                    if event.name == entity.name:
+                        self.__update_label(
+                            label,
+                            entity.score
+                        )
+                        break
         return UIState.IN_GAME
 
     def enable(self):
