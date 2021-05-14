@@ -151,6 +151,7 @@ def string_to_algorithm(name: str) -> Algorithm:
 
     Lançará um KeyError caso o algoritmo não exista
     """
+    print(name)
     algorithms = {
         "Quicksort (Lomuto)": Quicksort(lomuto_partitioner),
         "Quicksort (Hoare)": Quicksort(hoare_partitioner),

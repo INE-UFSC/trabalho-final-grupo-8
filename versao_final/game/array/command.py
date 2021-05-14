@@ -22,7 +22,14 @@ class SwapCommand(Command):
         self.__origin = origin
         self.__destination = destination
 
-    def execute(self):
+    def __change_colors(self) -> None:
+        for box in self.__array.boxes:
+            box.draw()
+        self.__array.boxes[self.__origin].draw((255, 255, 0))
+        self.__array.boxes[self.__destination].draw((255, 255, 0))
+
+    def execute(self) -> None:
+        self.__change_colors()
         for array in [self.__array.numbers, self.__array.boxes]:
             (array[self.__origin],
              array[self.__destination]) = (array[self.__destination],
@@ -49,8 +56,12 @@ class SetCommand(Command):
         self.__index = index
         self.__value = value
 
+    def __change_colors(self) -> None:
+        self.__array.boxes[self.__index].draw((0, 255, 0))
+
     def execute(self):
         self.__array.numbers[self.__index] = self.__value
         self.__array.boxes[self.__index] = self.__array.box_factory.create(
             self.__value
         )
+        self.__change_colors()

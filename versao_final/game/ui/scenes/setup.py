@@ -17,8 +17,9 @@ from game.game.state import GameState
 INFO_SORTS = {
     "Bubble Sort": "O algoritmo percorre o array diversas vezes, e a cada passagem fazer flutuar para o topo o maior elemento da sequência.",
     "Selection Sort": "A ordenacao e feita de forma que o algoritmo procura o menor valor do array e o posiciona na primeira posicao, trocando-o de lugar com o valor que ocupava tal posicao, entao a busca pelo segundo menor comeca e ao fim posiciona o segundo menor valor na segunda posicao e assim por diante.",
-    "InsertionSort": "Essa ordenação funciona como organizar cartas na mão, onde há uma parte organizada e outra não. A ordenação acontece avançando para a parte não organizada um item por vez, esse item é posto no lugar certo na parte ordenada, verificando do ultimo item organizado até o primero, parando quando encontrar um número menor",
-    "Quicksort (Lomuto)": "O QuickSort escolhe o último como pivô da operação de ordenação e o comparará com elementos anteriores os separando em três grupos: menor, maior e igual. Isso três arrays distintos que precisam ser ordenados(exceto o de igualdade). Para que isso aconteça, basta aplicar de novo a operação de quicksort em cada um desses arrays, até que eles fiquem com um elemento cada após isso, basta juntar os arrays e o resultado será o vetor ordenado."
+    "Insertion Sort": "Essa ordenação funciona como organizar cartas na mão, onde há uma parte organizada e outra não. A ordenação acontece avançando para a parte não organizada um item por vez, esse item é posto no lugar certo na parte ordenada, verificando do ultimo item organizado até o primero, parando quando encontrar um número menor",
+    "Quicksort (Lomuto)": "O QuickSort escolhe o último como pivô da operação de ordenação e o comparará com elementos anteriores os separando em três grupos: menor, maior e igual. Isso três arrays distintos que precisam ser ordenados(exceto o de igualdade). Para que isso aconteça, basta aplicar de novo a operação de quicksort em cada um desses arrays, até que eles fiquem com um elemento cada após isso, basta juntar os arrays e o resultado será o vetor ordenado.",
+    "Quicksort (Hoare)": "O QuickSort escolhe o último como pivô da operação de ordenação e o comparará com elementos anteriores os separando em três grupos: menor, maior e igual. Isso três arrays distintos que precisam ser ordenados(exceto o de igualdade). Para que isso aconteça, basta aplicar de novo a operação de quicksort em cada um desses arrays, até que eles fiquem com um elemento cada após isso, basta juntar os arrays e o resultado será o vetor ordenado."
 }
 
 
@@ -48,10 +49,13 @@ class Setup(UIScene):
         )
         self.elements["AlgorithmSelector"] = pygame_gui.elements.UIDropDownMenu(
             [
+                "Bubble Sort",
+                "Insertion Sort",
+                "Selection Sort",
                 "Quicksort (Lomuto)",
-                "Bubble Sort"
+                "Quicksort (Hoare)"
             ],
-            "Quicksort (Lomuto)",
+            "Bubble Sort",
             pg.Rect(10, 70, size[0]-20, 20),
             manager,
             container=self.container
