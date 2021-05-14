@@ -61,7 +61,7 @@ class Setup(UIScene):
             container=self.container
         )
         self.elements["AlgorithmDescription"] = pygame_gui.elements.UITextBox(
-            "Descrição do algoritmo...",
+            INFO_SORTS["Bubble Sort"],
             pg.Rect(10, 100, size[0]-20, 130),
             manager,
             container=self.container

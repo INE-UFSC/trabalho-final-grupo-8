@@ -1,8 +1,11 @@
 """ Módulo para o DAO """
 
+
 from abc import ABC, abstractmethod
+from typing import Any, Dict
 import json
-from typing import Any
+
+from game.entity.data import Data
 
 
 class DAO(ABC):
@@ -10,7 +13,7 @@ class DAO(ABC):
 
     def __init__(self, arquivo: str):
         self.__arquivo = arquivo
-        self.__cache: dict[str, Any] = {}
+        self.__cache: Dict[str, Any] = {}
 
         try:
             self.load()
@@ -37,13 +40,26 @@ class DAO(ABC):
         return self.__cache
 
     @abstractmethod
-    def add(self, obj):
+    def add(self, obj: Any):
         """ Adiciona uma key ao dicionário """
 
     @abstractmethod
-    def get(self, key):
+    def get(self, key: str):
         """ Recebe um valor conforme a key """
 
     @abstractmethod
-    def remove(self, key):
+    def remove(self, key: str):
         """ Remove uma key do dicionário """
+
+
+class ScoreboardDAO(DAO):
+    """ DAO para o placar """
+
+    def add(self, obj: Data):
+        self.cache[obj.name] = obj.score
+
+    def get(self, key: str):
+        return self.cache.get(key)
+
+    def remove(self, key: str):
+        del self.cache[key]
