@@ -121,14 +121,12 @@
       "regular_path": "assets/OpenSansPXBold.ttf"
     },
     "misc": {
-      "border_width": "0",
       "shadow_width": "0"
     }
   },
 
   "panel": {
     "misc": {
-      "border_width": "0",
       "shadow_width": "0"
     }
   },
@@ -138,9 +136,7 @@
   },
 
   "drop_down_menu": {
-    "colours": {
-      "normal_border": "#00000000"
-    },
+    "colours": {},
     "misc": {
       "shadow_width": "0"
     }
