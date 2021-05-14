@@ -50,7 +50,7 @@ class TimedGameMode(GameMode):
         self.__timed_entity: Optional[Entity] = None
         self.__entity: Optional[Entity] = None
         self.__entity_timer: Optional[Timer] = None
-        self.__timer = Timer(10.0, auto_start=False, one_shot=True)
+        self.__timer = Timer(120.0, auto_start=False, one_shot=True)
         self.__last_time = 0.0
 
     @property

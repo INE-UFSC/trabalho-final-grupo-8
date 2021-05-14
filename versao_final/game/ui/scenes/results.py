@@ -1,19 +1,17 @@
 """ Módulo para o resultado da partida """
 
 
+from typing import Tuple
+
 import pygame_gui
 import pygame as pg
 
 from game.ui.scene import UIScene, UIState
 from game.game.state import GameState
-from typing import Tuple
 
 
 class Victory(UIScene):
-    def __init__(self, state: GameState, manager: pygame_gui.UIManager, size: Tuple[int, int]):
-        super().__init__(manager, size)
-        self.__state = state
-        self.__font = manager.get_theme().get_font_dictionary().find_font(16, "MatchupPro")
+    """ Cena de vitória """
 
     def make_elements(self):
         size = self.container.rect.size
@@ -21,7 +19,7 @@ class Victory(UIScene):
 
         pygame_gui.elements.UILabel(
             pg.Rect(0, 40, size[0], 48),
-            "VITORIA!",
+            "VITÓRIA!",
             manager,
             container=self.container,
             object_id="victory"
@@ -44,10 +42,7 @@ class Victory(UIScene):
 
 
 class Defeat(UIScene):
-    def __init__(self, state: GameState, manager: pygame_gui.UIManager, size: Tuple[int, int]):
-        super().__init__(manager, size)
-        self.__state = state
-        self.__font = manager.get_theme().get_font_dictionary().find_font(16, "MatchupPro")
+    """ Cena de derrota """
 
     def make_elements(self):
         size = self.container.rect.size
@@ -75,4 +70,3 @@ class Defeat(UIScene):
                 if event.ui_element == self.elements["Score"]:
                     return UIState.SCORE
         return UIState.DEFEAT
-

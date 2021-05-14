@@ -29,8 +29,8 @@ class UI:
             UIState.MAIN_MENU: Menu(self.__manager, size),
             UIState.SETUP_MENU: Setup(game_state, self.__manager, size),
             UIState.IN_GAME: InGame(game_state, self.__manager, size),
-            UIState.VICTORY: Victory(game_state, self.__manager, size),
-            UIState.DEFEAT: Defeat(game_state, self.__manager, size),
+            UIState.VICTORY: Victory(self.__manager, size),
+            UIState.DEFEAT: Defeat(self.__manager, size),
             UIState.SCORE: Scoreboard(game_state, self.__manager, size),
             UIState.BIG_O: BigO(self.__manager, size)
         }

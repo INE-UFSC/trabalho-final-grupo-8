@@ -33,16 +33,17 @@ def main():
 
     box_outline = pg.image.load('./assets/BoxOutline.png').convert_alpha()
     font = pg.font.Font('./assets/OpenSansPXBold.ttf', 16)
+    background = pg.image.load('./assets/background.png')
 
     match_factory = MatchFactory()
     match_factory.player.set_interactor(PlayerInteractor())
     match_factory.player.set_array(Array(
         BoxFactory(box_outline, (41, 173, 255), font),
-        y_pos=(SCREEN_SIZE[1]-16)
+        y_pos=(SCREEN_SIZE[1]-16-48)
     ))
     match_factory.enemy.set_array(Array(
         BoxFactory(box_outline, (255, 0, 77), font),
-        y_pos=0
+        y_pos=(48)
     ))
     state = GameState(match_factory)
 
@@ -54,10 +55,17 @@ def main():
         delta_time = display.tick()
         timers.update(delta_time)
         gui.update(delta_time)
-        surface.fill((50, 50, 50))
+
+        if gui.in_game():
+            surface.blit(background, (0, 0))
+        else:
+            surface.fill((29, 43, 83))
+
         gui.draw(surface)
+
         if gui.in_game():
             state.draw(surface)
+
         display.draw(surface)
 
 
