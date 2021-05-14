@@ -2,7 +2,8 @@
 
 
 from abc import ABC, abstractmethod
-from game.array import Array, Box
+
+from game.array.array import Array
 
 
 class Command(ABC):

@@ -2,8 +2,10 @@
 
 
 from typing import Optional
+
 import pygame as pg
-from game.match import Match, MatchFactory
+
+from game.game.match import Match, MatchFactory
 
 
 class GameState():

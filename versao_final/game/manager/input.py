@@ -1,89 +1,19 @@
-""" Classes de gerenciamento """
+""" Módulo para o gerenciador de inputs """
 
 
-from typing import Callable, Dict, Set, Tuple
+from typing import Callable, Dict, Optional, Set
+
 import pygame as pg
-from game.utils import end
+
+from game.constants import MOUSE_DRAG
+from game.utils import Singleton, end
 
 
-class DisplayManager:
-    """ Inicializa a janela """
-
-    def __init__(self, caption: str, resolution: Tuple[int, int], framerate=60):
-        pg.init()
-        pg.font.init()
-
-        pg.display.set_caption(caption)
-
-        self.__framerate = framerate
-        self.__clock = pg.time.Clock()
-        self.__window = pg.display.set_mode(
-            resolution,
-            pg.RESIZABLE | pg.HWSURFACE | pg.DOUBLEBUF | pg.SCALED,
-            32
-        )
-        self.tick()
-
-    @property
-    def window(self) -> pg.surface.Surface:
-        """ A superfície da janela """
-        return self.__window
-
-    def tick(self) -> float:
-        """ Atualiza o clock do jogo """
-        return self.__clock.tick(self.__framerate) * 0.001
-
-    def draw(self, surface: pg.Surface):
-        """ Desenha uma superfície na janela """
-        self.__window.fill((0, 0, 0))
-        self.__window.blit(surface, (0, 0))
-        pg.display.update()
-
-
-MOUSE_DRAG = pg.event.custom_type()
-EVENT_STRINGS = {
-    "a": pg.K_a,
-    "b": pg.K_b,
-    "c": pg.K_c,
-    "d": pg.K_d,
-    "e": pg.K_e,
-    "f": pg.K_f,
-    "g": pg.K_g,
-    "h": pg.K_h,
-    "i": pg.K_i,
-    "j": pg.K_j,
-    "k": pg.K_k,
-    "l": pg.K_l,
-    "m": pg.K_m,
-    "n": pg.K_n,
-    "o": pg.K_o,
-    "p": pg.K_p,
-    "q": pg.K_q,
-    "r": pg.K_r,
-    "s": pg.K_s,
-    "t": pg.K_t,
-    "u": pg.K_u,
-    "v": pg.K_v,
-    "w": pg.K_w,
-    "x": pg.K_x,
-    "y": pg.K_y,
-    "z": pg.K_z,
-    "space": pg.K_SPACE,
-    "esc": pg.K_ESCAPE,
-    "up": pg.K_UP,
-    "down": pg.K_DOWN,
-    "left": pg.K_LEFT,
-    "right": pg.K_RIGHT,
-    "mouse_click": pg.MOUSEBUTTONDOWN,
-    "mouse_drag": MOUSE_DRAG
-}
-
-
-class InputManager:
+class Input(metaclass=Singleton):
     """ Gerencia as teclas pressionadas """
 
-    def __init__(self, mappings: Dict[str, str]):
-        self.__mappings = {EVENT_STRINGS[k]: m for m, k in mappings.items()}
+    def __init__(self, mappings: Optional[Dict[int, str]] = None):
+        self.__mappings = mappings if mappings is not None else {}
         self.__pressed: Set[str] = set()
         self.__just_pressed: Set[str] = set()
         self.__mouse_pos = (0, 0)
@@ -113,7 +43,7 @@ class InputManager:
     def __update_mouse_state(self):
         self.__mouse_pos = pg.mouse.get_pos()
         if self.__mappings.get(pg.MOUSEBUTTONDOWN) in self.__pressed:
-            if self.__mouse_frames_pressed == 4:
+            if self.__mouse_frames_pressed == 3:
                 action_name = self.__mappings.get(MOUSE_DRAG)
                 if action_name is not None:
                     self.__pressed.add(action_name)

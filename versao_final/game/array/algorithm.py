@@ -3,8 +3,9 @@
 
 from abc import ABC, abstractmethod
 from typing import Callable, Generator, Iterator, List, Tuple
-from game.array import Array
-from game.command import Command, SetCommand, SwapCommand
+
+from game.array.array import Array
+from game.array.command import Command, SetCommand, SwapCommand
 from game.utils import is_sorted
 
 
