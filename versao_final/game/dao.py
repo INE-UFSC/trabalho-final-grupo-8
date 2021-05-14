@@ -57,9 +57,11 @@ class ScoreboardDAO(DAO):
 
     def add(self, obj: Data):
         self.cache[obj.name] = obj.score
+        self.dump()
 
     def get(self, key: str):
         return self.cache.get(key)
 
     def remove(self, key: str):
         del self.cache[key]
+        self.dump()

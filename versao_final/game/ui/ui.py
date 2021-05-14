@@ -24,7 +24,7 @@ class UI:
             size,
             theme_path="./assets/theme.json"
         )
-        self.__state: UIState = UIState.SCORE
+        self.__state: UIState = UIState.MAIN_MENU
         self.__layouts: Dict[UIState, UIScene] = {
             UIState.MAIN_MENU: Menu(self.__manager, size),
             UIState.SETUP_MENU: Setup(game_state, self.__manager, size),

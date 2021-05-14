@@ -1,14 +1,15 @@
 """ Módulo para as classes de comportamento """
 
 
-from game.constants import DEFEAT, TIME_CHANGED, VICTORY
 import random
 from abc import ABC, abstractmethod
 from typing import Optional
 
 import pygame as pg
 
+from game.constants import DEFEAT, TIME_CHANGED, VICTORY
 from game.exceptions import AttributesNotSetException
+from game.dao import ScoreboardDAO
 from game.entity.entity import Entity
 from game.utils import Timer
 
@@ -32,6 +33,11 @@ class GameMode(ABC):
     def update(self) -> None:
         """ Atualiza as entidades e suas pontuações """
 
+    @property
+    @abstractmethod
+    def scoreboard(self) -> ScoreboardDAO:
+        """ Retorna o placar para esse modo de jogo """
+
 
 class TimedGameMode(GameMode):
     """
@@ -40,11 +46,16 @@ class TimedGameMode(GameMode):
     """
 
     def __init__(self) -> None:
+        self.__scoreboard = ScoreboardDAO('assets/timed_scoreboard.json')
         self.__timed_entity: Optional[Entity] = None
         self.__entity: Optional[Entity] = None
         self.__entity_timer: Optional[Timer] = None
-        self.__timer = Timer(120.0, auto_start=False, one_shot=True)
+        self.__timer = Timer(10.0, auto_start=False, one_shot=True)
         self.__last_time = 0.0
+
+    @property
+    def scoreboard(self) -> ScoreboardDAO:
+        return self.__scoreboard
 
     def set_entities(self, player: Entity, enemy: Entity) -> None:
         if not isinstance(player, Entity) or not isinstance(enemy, Entity):
@@ -98,8 +109,15 @@ class TurnsGameMode(GameMode):
     """
 
     def __init__(self) -> None:
+        self.__scoreboard = ScoreboardDAO('assets/turns_scoreboard.json')
+        self.__player: Optional[Entity] = None
+        self.__enemy: Optional[Entity] = None
         self.__current_entity: Optional[Entity] = None
         self.__next_entity: Optional[Entity] = None
+
+    @property
+    def scoreboard(self) -> ScoreboardDAO:
+        return self.__scoreboard
 
     def __next_turn(self):
         self.__current_entity, self.__next_entity = self.__next_entity, self.__current_entity
@@ -107,14 +125,28 @@ class TurnsGameMode(GameMode):
     def set_entities(self, player: Entity, enemy: Entity) -> None:
         if not isinstance(player, Entity) or not isinstance(enemy, Entity):
             raise TypeError
+        self.__player = player
+        self.__enemy = enemy
         self.__current_entity = player
         self.__next_entity = enemy
+        self.__player.data.score = 500
+        self.__enemy.data.score = 500
         set_random_array(player)
         set_random_array(enemy)
 
     def update(self) -> None:
-        if self.__current_entity is None or self.__next_entity is None:
+        if (
+            self.__current_entity is None or self.__next_entity is None or
+            self.__player is None or self.__enemy is None
+        ):
             raise AttributesNotSetException
+
+        if self.__enemy.data.score <= 0:
+            pg.event.post(pg.event.Event(VICTORY))
+            return
+        if self.__player.data.score <= 0:
+            pg.event.post(pg.event.Event(DEFEAT))
+            return
 
         self.__current_entity.interactor.update()
         if self.__current_entity.interactor.has_moved():

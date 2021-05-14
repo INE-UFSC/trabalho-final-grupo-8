@@ -62,10 +62,17 @@ class Scoreboard(UIScene):
 
     def enable(self):
         if self.__state.match is not None:
-            self.__state.scoreboard.add(self.__state.match.player.data)
-        self.elements["Scoreboard"].html_text = scoreboard_to_string(
-            self.__state.scoreboard.get_all()
-        )
+            scoreboard = self.__state.match.game_mode.scoreboard
+            player = self.__state.match.player.data
+            old_score = scoreboard.get(player.name)
+            if (
+                old_score is None or
+                old_score < player.score
+            ):
+                scoreboard.add(player)
+            self.elements["Scoreboard"].html_text = scoreboard_to_string(
+                scoreboard.get_all()
+            )
         self.elements["Scoreboard"].rebuild()
         super().enable()
 

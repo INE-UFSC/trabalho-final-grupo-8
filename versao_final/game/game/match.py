@@ -22,8 +22,12 @@ class Match:
         self.__game_mode = game_mode
         self.__player = player
         self.__enemy = enemy
-
         self.__game_mode.set_entities(player, enemy)
+
+    @property
+    def game_mode(self) -> GameMode:
+        """ O modo de jogo """
+        return self.__game_mode
 
     @property
     def player(self) -> Entity:

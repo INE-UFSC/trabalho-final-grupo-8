@@ -13,14 +13,8 @@ class GameState:
     """ Representa o estado do jogo """
 
     def __init__(self, match_factory: MatchFactory):
-        self.__scoreboard = ScoreboardDAO('assets/scoreboard.json')
         self.__match_factory = match_factory
         self.__match: Optional[Match] = None
-
-    @property
-    def scoreboard(self) -> ScoreboardDAO:
-        """ O placar """
-        return self.__scoreboard
 
     @property
     def match(self) -> Optional[Match]:
