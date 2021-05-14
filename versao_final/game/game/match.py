@@ -38,11 +38,6 @@ class Match:
     def update(self):
         """ Atualiza a partida """
         self.__game_mode.update()
-        # for entity in [self.__player, self.__enemy]:
-        #     entity.interactor.update()
-        #     self.__score_function(entity)
-        #     if entity.interactor.is_done():
-        #         self.__set_new_array(entity)
 
     def draw(self, surface: pg.Surface):
         """ Desenha os arrays """

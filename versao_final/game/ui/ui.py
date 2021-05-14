@@ -12,7 +12,7 @@ from game.ui.scenes.game import InGame
 from game.ui.scenes.setup import Setup
 from game.ui.scenes.menu import Menu
 from game.ui.scenes.big_o import BigO
-from game.ui.scenes.result import Victory, Defeat
+from game.ui.scenes.results import Victory, Defeat
 from game.ui.scenes.scoreboard import Scoreboard
 
 

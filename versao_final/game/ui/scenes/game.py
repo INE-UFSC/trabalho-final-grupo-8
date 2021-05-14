@@ -6,9 +6,10 @@ from typing import Tuple, Union
 import pygame_gui
 import pygame as pg
 
-from game.constants import SCORE_CHANGED
+from game.constants import DEFEAT, SCORE_CHANGED, TIME_CHANGED, VICTORY
 from game.ui.scene import UIScene, UIState
 from game.game.state import GameState
+from game.utils import seconds_as_string
 
 
 class InGame(UIScene):
@@ -88,9 +89,9 @@ class InGame(UIScene):
                 -self.__font.size(text)[0],
                 self.elements[element].rect.y
             ))
-        elif element == 'timer':
+        elif element == 'Timer':
             self.elements[element].set_position((
-                self.container.rect.w // 2 - self.__font.size(text),
+                self.container.rect.w // 2 - self.__font.size(text)[0] // 2,
                 self.container.rect.h // 2
             ))
         self.elements[element].set_text(text)
@@ -107,13 +108,18 @@ class InGame(UIScene):
                             entity.score
                         )
                         break
+            if event.type == VICTORY:
+                return UIState.VICTORY
+            if event.type == DEFEAT:
+                return UIState.DEFEAT
+            if event.type == TIME_CHANGED:
+                self.__update_label("Timer", seconds_as_string(event.value))
         return UIState.IN_GAME
 
     def enable(self):
         if self.__state.match is not None:
             player = self.__state.match.player.data
             enemy = self.__state.match.enemy.data
-            # timer = self.__state.match.timer
             self.__update_label('PlayerName', player.name)
             self.__update_label('PlayerScore', player.score)
             self.__update_label('EnemyName', enemy.name)

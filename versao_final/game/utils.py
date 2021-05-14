@@ -22,6 +22,13 @@ def is_sorted(array: List[float]):
     return True
 
 
+def seconds_as_string(seconds: float) -> str:
+    """ Retorna o tempo em minutos:segundos """
+    minutes = seconds // 60
+    seconds %= 60
+    return f"{minutes:02d}:{seconds:02d}"
+
+
 class Singleton(type):
     """ Metaclasse referente a um singleton """
 

@@ -1,9 +1,12 @@
 """ Módulo para as classes de comportamento """
 
 
+from game.constants import DEFEAT, TIME_CHANGED, VICTORY
 import random
 from abc import ABC, abstractmethod
 from typing import Optional
+
+import pygame as pg
 
 from game.exceptions import AttributesNotSetException
 from game.entity.entity import Entity
@@ -39,13 +42,15 @@ class TimedGameMode(GameMode):
     def __init__(self) -> None:
         self.__timed_entity: Optional[Entity] = None
         self.__entity: Optional[Entity] = None
-        self.__timer: Optional[Timer] = None
+        self.__entity_timer: Optional[Timer] = None
+        self.__timer = Timer(120.0, auto_start=False, one_shot=True)
+        self.__last_time = 0.0
 
     def set_entities(self, player: Entity, enemy: Entity) -> None:
         if not isinstance(player, Entity) or not isinstance(enemy, Entity):
             raise TypeError
         self.__timed_entity = enemy
-        self.__timer = Timer(1.0)
+        self.__entity_timer = Timer(1.5)
         self.__entity = player
         set_random_array(player)
         set_random_array(enemy)
@@ -54,8 +59,27 @@ class TimedGameMode(GameMode):
         if self.__timed_entity is None or self.__entity is None:
             raise AttributesNotSetException
 
+        # Emite o sinal do timer atualizado
+        if round(self.__timer.time_left) != self.__last_time:
+            self.__last_time = round(self.__timer.time_left)
+            pg.event.post(pg.event.Event(
+                TIME_CHANGED, {"value": self.__last_time}
+            ))
+
+        # Checa se o timer acabou
+        if self.__timer.timeout:
+            if self.__entity.data.score >= self.__timed_entity.data.score:
+                pg.event.post(pg.event.Event(VICTORY))
+            else:
+                pg.event.post(pg.event.Event(DEFEAT))
+            return
+
+        # Inicia o timer caso não esteja ativo
+        if self.__timer.paused:
+            self.__timer.start()
+
         # Atualiza a entidade de timer
-        if self.__timer is not None and self.__timer.timeout:
+        if self.__entity_timer is not None and self.__entity_timer.timeout:
             self.__timed_entity.interactor.update()
         if self.__timed_entity.interactor.is_done():
             self.__timed_entity.data.score += 10
