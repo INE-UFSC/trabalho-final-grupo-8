@@ -19,6 +19,7 @@ from game.game.match import MatchFactory
 def main():
     """ Função principal do projeto """
 
+    # Classes de setup
     display = Display("Sort it!", SCREEN_SIZE)
     Sound('./assets', {
         'PlayerMove': 'move1.wav',
@@ -31,10 +32,12 @@ def main():
     })
     timers = TimerList()
 
+    # Imagens
     box_outline = pg.image.load('./assets/BoxOutline.png').convert_alpha()
     font = pg.font.Font('./assets/OpenSansPXBold.ttf', 16)
     background = pg.image.load('./assets/background.png')
 
+    # Estado do jogo
     match_factory = MatchFactory()
     match_factory.player.set_interactor(PlayerInteractor())
     match_factory.player.set_array(Array(
@@ -47,7 +50,10 @@ def main():
     ))
     state = GameState(match_factory)
 
+    # Superfície temporária de desenho
     surface = pg.Surface(SCREEN_SIZE)
+
+    # Interface gráfica
     gui = UI(state, SCREEN_SIZE)
 
     while True:

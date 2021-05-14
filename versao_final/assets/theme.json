@@ -101,7 +101,7 @@
   },
 
   "lose": {
-     "prototype": "label",
+    "prototype": "label",
     "font": {
       "name": "OpenSansPXBold",
       "size": 48,
@@ -173,16 +173,6 @@
       "selected_text": "#00000000",
       "active_text": "#00000000",
       "disabled_text": "#00000000",
-      "normal_bg": "#00000000",
-      "hovered_bg": "#00000000",
-      "disabled_bg": "#00000000",
-      "selected_bg": "#00000000",
-      "active_bg": "#00000000"
-    }
-  },
-
-  "drop_down_menu.#selected_option": {
-    "colours": {
       "normal_bg": "#00000000",
       "hovered_bg": "#00000000",
       "disabled_bg": "#00000000",

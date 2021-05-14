@@ -27,7 +27,7 @@ class Victory(UIScene):
 
         self.elements["Score"] = pygame_gui.elements.UIButton(
             pg.Rect(size[0] // 2 - 80, size[1] - 140, 160, 40),
-            "placar de pontos",
+            "Ver placar de pontos",
             manager,
             container=self.container,
             object_id="green_button"
@@ -58,7 +58,7 @@ class Defeat(UIScene):
 
         self.elements["Score"] = pygame_gui.elements.UIButton(
             pg.Rect(size[0] // 2 - 80, size[1] - 140, 160, 40),
-            "placar de pontos",
+            "Ver placar de pontos",
             manager,
             container=self.container,
             object_id="red_button"

@@ -83,15 +83,18 @@ class InGame(UIScene):
         text: Union[str, int]
     ):
         text = str(text)
-        self.elements[element].set_dimensions(self.__font.size(text))
+        size = list(self.__font.size(text))
+        size[0] += 4
+
+        self.elements[element].set_dimensions(size)
         if element.startswith('Enemy'):
             self.elements[element].set_relative_position((
-                -self.__font.size(text)[0],
+                -size[0],
                 self.elements[element].rect.y
             ))
         elif element == 'Timer':
             self.elements[element].set_position((
-                self.container.rect.w // 2 - self.__font.size(text)[0] // 2,
+                self.container.rect.w // 2 - size[0] // 2,
                 self.container.rect.h // 2
             ))
         self.elements[element].set_text(text)

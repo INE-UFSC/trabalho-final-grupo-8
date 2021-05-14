@@ -61,7 +61,7 @@ class TimedGameMode(GameMode):
         if not isinstance(player, Entity) or not isinstance(enemy, Entity):
             raise TypeError
         self.__timed_entity = enemy
-        self.__entity_timer = Timer(1.5)
+        self.__entity_timer = Timer(1.0)
         self.__entity = player
         set_random_array(player)
         set_random_array(enemy)
