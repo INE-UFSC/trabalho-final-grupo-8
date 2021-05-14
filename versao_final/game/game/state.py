@@ -8,7 +8,7 @@ import pygame as pg
 from game.game.match import Match, MatchFactory
 
 
-class GameState():
+class GameState:
     """ Representa o estado do jogo """
 
     def __init__(self, match_factory: MatchFactory):

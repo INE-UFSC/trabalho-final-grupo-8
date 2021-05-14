@@ -121,6 +121,6 @@ class Setup(UIScene):
                         )
                         self.__state.match = self.__state.match_factory.create()
                     except ValueError:
-                        print("Erro na construção do jogo...")
+                        return UIState.SETUP_MENU
                     return UIState.IN_GAME
         return UIState.SETUP_MENU

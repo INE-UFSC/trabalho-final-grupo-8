@@ -30,6 +30,8 @@ class Data:
     @score.setter
     def score(self, score: int) -> None:
         """ Define uma nova pontuação """
+        if not isinstance(score, int):
+            raise TypeError
         self.__score = score
         event = pg.event.Event(
             SCORE_CHANGED,

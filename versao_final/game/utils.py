@@ -91,6 +91,7 @@ class TimerList(metaclass=Singleton):
         self.__timers: List[Timer] = []
 
     def add_timer(self, timer: Timer) -> None:
+        """ Adiciona um timer à lista de timers """
         if not isinstance(timer, Timer):
             raise TypeError
         self.__timers.append(timer)
