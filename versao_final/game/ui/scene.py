@@ -11,11 +11,11 @@ from pygame_gui.core.ui_element import UIElement
 class UIState(IntEnum):
     """ Estados possíveis da interface """
     MAIN_MENU = 0
-    SETUP_MENU = 1
-    IN_GAME = 2
-    VICTORY = 3
-    DEFEAT = 4
-    INFO_MENU = 5
+    BIG_O = 1
+    SETUP_MENU = 2
+    IN_GAME = 3
+    VICTORY = 4
+    DEFEAT = 5
 
 
 class UIScene(ABC):

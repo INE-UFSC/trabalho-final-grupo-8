@@ -8,10 +8,10 @@ import pygame as pg
 
 from game.game.state import GameState
 from game.ui.scene import UIState, UIScene
-from game.ui.scenes.info import Info
 from game.ui.scenes.game import InGame
 from game.ui.scenes.setup import Setup
 from game.ui.scenes.menu import Menu
+from game.ui.scenes.big_o import BigO
 
 
 class UI:
@@ -27,7 +27,7 @@ class UI:
             UIState.MAIN_MENU: Menu(self.__manager, size),
             UIState.SETUP_MENU: Setup(game_state, self.__manager, size),
             UIState.IN_GAME: InGame(game_state, self.__manager, size),
-            UIState.INFO_MENU: Info(self.__manager, size)
+            UIState.BIG_O: BigO(self.__manager, size)
         }
         self.__layouts[self.__state].enable()
 

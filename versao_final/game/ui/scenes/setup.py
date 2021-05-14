@@ -66,19 +66,31 @@ class Setup(UIScene):
             manager,
             container=self.container
         )
+        self.elements["PlayButton"] = pygame_gui.elements.UIButton(
+            pg.Rect(10, size[1] - 50, size[0] // 3 - 20, 40),
+            "Jogar",
+            manager,
+            container=self.container,
+            object_id="green_button"
+        )
         self.elements["InfoButton"] = pygame_gui.elements.UIButton(
-            pg.Rect(size[0]/2 + 10, size[1] - 60, (size[0] // 2) - 25, 40),
+            pg.Rect(size[0] // 3 + 10, size[1] - 50, size[0] // 3 - 20, 40),
             "Info",
             manager,
             container=self.container,
             object_id="info_button"
         )
-        self.elements["PlayButton"] = pygame_gui.elements.UIButton(
-            pg.Rect(10, size[1] - 60, (size[0] // 2) - 25, 40),
-            "Jogar",
+        self.elements["ExitButton"] = pygame_gui.elements.UIButton(
+            pg.Rect(
+                2 * size[0] // 3 + 10,
+                size[1] - 50,
+                size[0] // 3 - 20,
+                40
+            ),
+            "Voltar",
             manager,
             container=self.container,
-            object_id="green_button"
+            object_id="red_button"
         )
 
     def handle_event(self, event: pg.event.Event) -> UIState:
@@ -90,7 +102,9 @@ class Setup(UIScene):
                     self.elements["AlgorithmDescription"].rebuild()
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.elements["InfoButton"]:
-                    return UIState.INFO_MENU
+                    return UIState.BIG_O
+                if event.ui_element == self.elements["ExitButton"]:
+                    return UIState.MAIN_MENU
                 if event.ui_element == self.elements["PlayButton"]:
                     name = self.elements["NameBox"].get_text()
                     mode = self.elements["ModeSelector"].current_state.selected_option
