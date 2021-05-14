@@ -88,6 +88,30 @@
     }
   },
 
+  "victory": {
+    "prototype": "label",
+    "font": {
+      "name": "OpenSansPXBold",
+      "size": 48,
+      "regular_path": "assets/OpenSansPXBold.ttf"
+    },
+    "colours": {
+      "normal_text": "#29adff"
+    }
+  },
+
+  "lose": {
+     "prototype": "label",
+    "font": {
+      "name": "OpenSansPXBold",
+      "size": 48,
+      "regular_path": "assets/OpenSansPXBold.ttf"
+    },
+    "colours": {
+      "normal_text": "#be1250"
+    }
+  },
+
   "description": {
     "prototype": "label",
     "colours": {

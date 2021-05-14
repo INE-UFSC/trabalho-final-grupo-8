@@ -16,6 +16,7 @@ class UIState(IntEnum):
     IN_GAME = 3
     VICTORY = 4
     DEFEAT = 5
+    SCORE = 6
 
 
 class UIScene(ABC):

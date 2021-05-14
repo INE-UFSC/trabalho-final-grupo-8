@@ -12,6 +12,8 @@ from game.ui.scenes.game import InGame
 from game.ui.scenes.setup import Setup
 from game.ui.scenes.menu import Menu
 from game.ui.scenes.big_o import BigO
+from game.ui.scenes.result import Victory, Defeat
+from game.ui.scenes.scoreboard import Scoreboard
 
 
 class UI:
@@ -27,6 +29,9 @@ class UI:
             UIState.MAIN_MENU: Menu(self.__manager, size),
             UIState.SETUP_MENU: Setup(game_state, self.__manager, size),
             UIState.IN_GAME: InGame(game_state, self.__manager, size),
+            UIState.VICTORY: Victory(game_state, self.__manager, size),
+            UIState.DEFEAT: Defeat(game_state, self.__manager, size),
+            UIState.SCORE: Scoreboard(game_state, self.__manager, size),
             UIState.BIG_O: BigO(self.__manager, size)
         }
         self.__layouts[self.__state].enable()
