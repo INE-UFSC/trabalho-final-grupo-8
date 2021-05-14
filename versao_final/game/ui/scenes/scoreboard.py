@@ -5,7 +5,7 @@ import pygame as pg
 from game.ui.scene import UIScene, UIState
 from game.game.state import GameState
 from typing import Tuple
-
+from game.utils import end
 
 class Scoreboard(UIScene):
 
