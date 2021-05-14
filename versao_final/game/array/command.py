@@ -54,27 +54,3 @@ class SetCommand(Command):
         self.__array.boxes[self.__index] = self.__array.box_factory.create(
             self.__value
         )
-
-
-class CommandFactory(ABC):
-    """ Classe criadora de comandos """
-
-    @abstractmethod
-    def create(self, origin: int, destination: int) -> Command:
-        """
-        Cria um novo comando
-
-        Por enquanto todos deverão receber a posição
-        inicial e a posição final, no entanto caso
-        seja necessário isso poderá ser alterado.
-        """
-
-
-class SwapCommandFactory(CommandFactory):
-    """ Classe criadora de comandos de troca de posições """
-
-    def __init__(self, array: Array):
-        self.__array = array
-
-    def create(self, origin: int, destination: int):
-        return SwapCommand(self.__array, origin, destination)

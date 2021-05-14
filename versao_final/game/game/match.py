@@ -1,13 +1,13 @@
 """ Módulo relacionado à partida """
 
 
-import random
-from abc import abstractmethod
+from typing import Optional
 
 import pygame as pg
 
-from game.manager.sound import Sound
 from game.entity.entity import Entity, EntityBuilder
+from game.exceptions import AttributesNotSetException
+from game.game.mode import GameMode
 
 
 class Match:
@@ -15,13 +15,15 @@ class Match:
 
     def __init__(
         self,
+        game_mode: GameMode,
         player: Entity,
         enemy: Entity
     ):
+        self.__game_mode = game_mode
         self.__player = player
         self.__enemy = enemy
-        self.__set_new_array(player)
-        self.__set_new_array(enemy)
+
+        self.__game_mode.set_entities(player, enemy)
 
     @property
     def player(self) -> Entity:
@@ -33,22 +35,14 @@ class Match:
         """ O adversário """
         return self.__enemy
 
-    @abstractmethod
-    def __set_new_array(self, entity: Entity):
-        """ Define um novo array para uma entidade """
-        new_array = list(range(10))
-        random.shuffle(new_array)
-        entity.array.numbers = new_array
-        entity.interactor.set_array(entity.array)
-
     def update(self):
         """ Atualiza a partida """
-        for entity in [self.__player, self.__enemy]:
-            entity.interactor.update()
-            if entity.array.is_sorted():
-                Sound().play('FinishedSorting')
-                entity.data.score += 10
-                self.__set_new_array(entity)
+        self.__game_mode.update()
+        # for entity in [self.__player, self.__enemy]:
+        #     entity.interactor.update()
+        #     self.__score_function(entity)
+        #     if entity.interactor.is_done():
+        #         self.__set_new_array(entity)
 
     def draw(self, surface: pg.Surface):
         """ Desenha os arrays """
@@ -65,6 +59,13 @@ class MatchFactory:
     def __init__(self):
         self.__player = EntityBuilder()
         self.__enemy = EntityBuilder()
+        self.__game_mode: Optional[GameMode] = None
+
+    def set_game_mode(self, game_mode: GameMode) -> None:
+        """ Define o modo de jogo a ser criado """
+        if not isinstance(game_mode, GameMode):
+            raise TypeError
+        self.__game_mode = game_mode
 
     @property
     def player(self) -> EntityBuilder:
@@ -78,7 +79,10 @@ class MatchFactory:
 
     def create(self):
         """ Cria a partida """
+        if self.__game_mode is None:
+            raise AttributesNotSetException
         return Match(
+            self.__game_mode,
             self.__player.get_result(),
             self.__enemy.get_result()
         )

@@ -16,29 +16,20 @@ class Algorithm(ABC):
     def sort(self, box_array: Array) -> Iterator[Command]:
         """ Ordenar apenas um passo, por meio de um iterador """
 
-    @abstractmethod
-    def is_done(self) -> bool:
-        """ Se o algoritmo já terminou a ordenação """
-
 
 class BubbleSort(Algorithm):
     """ Implementação do algoritmo de bubblesort: """
 
-    def __init__(self):
-        self.__done = False
-
-    def is_done(self) -> bool:
-        return self.__done
-
     def sort(self, box_array: Array) -> Iterator[Command]:
         array = box_array.numbers
         less = 1
+        done = False
 
-        while not self.__done:
+        while not done:
             for i in range(len(array) - less):
                 if array[i] > array[i + 1]:
                     yield SwapCommand(box_array, i, i + 1)
-            self.__done = is_sorted(array)
+            done = is_sorted(array)
             less += 1
 
 
@@ -56,10 +47,6 @@ class Quicksort(Algorithm):
 
     def __init__(self, partitioner: Partitioner):
         self.__partitioner = partitioner
-        self.__done = False
-
-    def is_done(self) -> bool:
-        return self.__done
 
     def sort(self, box_array: Array) -> Iterator[Command]:
         array = box_array.numbers
@@ -87,17 +74,10 @@ class Quicksort(Algorithm):
             if pivot + 1 < high:
                 stack.append(pivot + 1)
                 stack.append(high)
-        self.__done = True
 
 
 class InsertionSort(Algorithm):
     """ Implementação do algoritmo de InsertionSort """
-
-    def __init__(self):
-        self.__done = False
-
-    def is_done(self) -> bool:
-        return self.__done
 
     def sort(self, box_array: Array) -> Iterator[Command]:
         """
@@ -112,17 +92,10 @@ class InsertionSort(Algorithm):
                 SetCommand(box_array, j + 1, array[j]).execute()
                 j -= 1
             yield SetCommand(box_array, j + 1, key)
-        self.__done = True
 
 
 class SelectionSort(Algorithm):
     """Implementação do algoritmo de Selectionsort:"""
-
-    def __init__(self):
-        self.__done = False
-
-    def is_done(self):
-        return self.__done
 
     def sort(self, box_array: Array):
         array = box_array.numbers
@@ -132,7 +105,6 @@ class SelectionSort(Algorithm):
                 if array[minimum_index] > array[j]:
                     minimum_index = j
             yield SwapCommand(box_array, minimum_index, i)
-        self.__done = True
 
 
 def lomuto_partitioner(

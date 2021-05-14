@@ -7,9 +7,9 @@ import pygame_gui
 import pygame as pg
 
 from game.array.algorithm import string_to_algorithm
+from game.game.mode import string_to_mode
 from game.ui.scene import UIScene, UIState
 from game.entity.interactor import EnemyInteractor
-from game.entity.behaviour import string_to_behaviour
 from game.entity.data import Data
 from game.game.state import GameState
 
@@ -96,10 +96,10 @@ class Setup(UIScene):
                         self.__state.match_factory.enemy.set_data(
                             Data("Inimigo"))
                         self.__state.match_factory.enemy.set_interactor(
-                            EnemyInteractor(
-                                string_to_algorithm(algorithm),
-                                string_to_behaviour(mode)
-                            )
+                            EnemyInteractor(string_to_algorithm(algorithm))
+                        )
+                        self.__state.match_factory.set_game_mode(
+                            string_to_mode(mode)
                         )
                         self.__state.match = self.__state.match_factory.create()
                     except ValueError:

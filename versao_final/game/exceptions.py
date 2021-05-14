@@ -2,7 +2,7 @@
 
 
 class AttributesNotSetException(Exception):
-    """ Lançada em builder quando os atributos não foram totalemente definidos """
+    """ Lançada quando os atributos não foram totalmente definidos """
 
     def __init__(self):
-        super().__init__("Atributos não definidos no Builder")
+        super().__init__("Atributos não definidos")
